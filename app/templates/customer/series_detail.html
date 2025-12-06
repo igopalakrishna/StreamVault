@@ -1,0 +1,240 @@
+{% extends "base.html" %}
+
+{% block title %}{{ series.WS_NAME }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{ url_for('customer.home') }}">Browse</a></li>
+        <li class="breadcrumb-item active">{{ series.WS_NAME }}</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <!-- Main Content -->
+    <div class="col-lg-8">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h1 class="mb-3">{{ series.WS_NAME }}</h1>
+                
+                <!-- Rating & Views -->
+                <div class="d-flex align-items-center gap-4 mb-4">
+                    <div class="series-rating fs-5">
+                        <i class="bi bi-star-fill text-gold"></i>
+                        <span class="fw-bold">{{ "%.1f"|format(rating_info.AVG_RATING|float) }}</span>
+                        <span class="text-muted">({{ rating_info.TOTAL_RATINGS }} ratings)</span>
+                    </div>
+                    <div class="text-muted">
+                        <i class="bi bi-eye me-1"></i>{{ "{:,}".format(viewer_info.TOTAL_VIEWERS|int) }} total views
+                    </div>
+                </div>
+                
+                <!-- Types -->
+                <div class="mb-3">
+                    {% for t in types %}
+                    <span class="badge bg-accent me-1">{{ t.WS_TYPE_NAME }}</span>
+                    {% endfor %}
+                </div>
+                
+                <!-- Info Grid -->
+                <div class="row mt-4">
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <td class="text-muted">Language</td>
+                                <td>{{ series.LANGUAGE }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Country of Origin</td>
+                                <td>{{ series.COUNTRY_OF_ORIGIN }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Release Date</td>
+                                <td>{{ series.RELEASE_DATE.strftime('%B %d, %Y') if series.RELEASE_DATE else 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Episodes</td>
+                                <td>{{ series.NUM_OF_EPS }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-sm">
+                            <tr>
+                                <td class="text-muted">Production House</td>
+                                <td>{{ series.PH_NAME }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Studio Location</td>
+                                <td>{{ series.PH_CITY }}, {{ series.PH_COUNTRY }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Established</td>
+                                <td>{{ series.YEAR_ESTABLISHED }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Episodes -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list-ol me-2"></i>Episodes ({{ episodes|length }})</h5>
+            </div>
+            <div class="card-body p-0">
+                {% if episodes %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Episode Name</th>
+                                <th>Viewers</th>
+                                <th>Tech Issues</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for ep in episodes %}
+                            <tr>
+                                <td><code>{{ ep.EP_ID }}</code></td>
+                                <td>{{ ep.EP_NAME }}</td>
+                                <td>{{ "{:,}".format(ep.TOTAL_VIEWERS) }}</td>
+                                <td>
+                                    {% if ep.TECH_INTERRUPT == 'Yes' %}
+                                    <span class="badge bg-warning text-dark">Yes</span>
+                                    {% else %}
+                                    <span class="badge bg-success">No</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted p-4 mb-0">No episodes available yet.</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Reviews Section -->
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-chat-quote me-2"></i>Reviews</h5>
+            </div>
+            <div class="card-body">
+                {% if is_authenticated %}
+                <!-- Feedback Form -->
+                <div class="mb-4 p-3 bg-darker rounded">
+                    <h6>{{ 'Update Your Review' if user_feedback else 'Leave a Review' }}</h6>
+                    <form method="POST" action="{{ url_for('customer.submit_feedback', ws_id=series.WS_ID) }}">
+                        <div class="mb-3">
+                            <label class="form-label">Rating</label>
+                            <div class="rating-input">
+                                {% for i in range(5, 0, -1) %}
+                                <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}" 
+                                       {% if user_feedback and user_feedback.RATING == i %}checked{% endif %}
+                                       required>
+                                <label for="star{{ i }}"><i class="bi bi-star-fill"></i></label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="feedback_txt" class="form-label">Your Review</label>
+                            <textarea class="form-control" id="feedback_txt" name="feedback_txt" rows="3" 
+                                      maxlength="400" required>{{ user_feedback.FEEDBACK_TXT if user_feedback else '' }}</textarea>
+                            <div class="form-text">Maximum 400 characters</div>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-accent btn-sm">
+                                {{ 'Update Review' if user_feedback else 'Submit Review' }}
+                            </button>
+                            {% if user_feedback %}
+                            <form method="POST" action="{{ url_for('customer.delete_feedback', ws_id=series.WS_ID) }}" class="d-inline">
+                                <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                        onclick="return confirm('Delete your review?')">Delete</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <a href="{{ url_for('auth.login') }}">Log in</a> to leave a review.
+                </div>
+                {% endif %}
+                
+                <!-- Reviews List -->
+                {% for review in reviews %}
+                <div class="review-card">
+                    <div class="review-header">
+                        <div>
+                            <span class="reviewer-name">{{ review.FIRST_NAME }} {{ review.LAST_NAME }}</span>
+                            <span class="rating-stars ms-2">
+                                {% for i in range(1, 6) %}
+                                <i class="bi bi-star-fill star {% if i <= review.RATING %}filled{% endif %}"></i>
+                                {% endfor %}
+                            </span>
+                        </div>
+                        <span class="review-date">{{ review.DATE_RECORDED.strftime('%b %d, %Y') }}</span>
+                    </div>
+                    <p class="review-text mb-0">{{ review.FEEDBACK_TXT }}</p>
+                </div>
+                {% else %}
+                <p class="text-muted">No reviews yet. Be the first to review!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Available In Countries -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-globe me-2"></i>Available In</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for rc in release_countries %}
+                <li class="list-group-item bg-transparent d-flex justify-content-between">
+                    <span>{{ rc.COUNTRY_NAME }}</span>
+                    <small class="text-muted">{{ rc.COUNTRY_RELEASE_DT.strftime('%Y') if rc.COUNTRY_RELEASE_DT else '' }}</small>
+                </li>
+                {% else %}
+                <li class="list-group-item bg-transparent text-muted">No country data</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <!-- Dubbing Languages -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-volume-up me-2"></i>Dubbing</h6>
+            </div>
+            <div class="card-body">
+                {% for lang in dubbing_langs %}
+                <span class="badge bg-dark me-1 mb-1">{{ lang.LANG_NAME }}</span>
+                {% else %}
+                <span class="text-muted">Original audio only</span>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Subtitle Languages -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0"><i class="bi bi-badge-cc me-2"></i>Subtitles</h6>
+            </div>
+            <div class="card-body">
+                {% for lang in subtitle_langs %}
+                <span class="badge bg-secondary me-1 mb-1">{{ lang.LANG_NAME }}</span>
+                {% else %}
+                <span class="text-muted">No subtitles available</span>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

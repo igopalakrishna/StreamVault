@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Series{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-collection-play me-2 text-accent"></i>Discover Series</h1>
+    <p class="lead">Explore our collection of premium web series</p>
+</div>
+
+<!-- Filter Bar -->
+<div class="filter-bar">
+    <form method="GET" action="{{ url_for('customer.home') }}">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label for="q" class="form-label">Search</label>
+                <input type="text" class="form-control" id="q" name="q" 
+                       value="{{ search_query }}" placeholder="Series name...">
+            </div>
+            <div class="col-md-2">
+                <label for="type" class="form-label">Genre</label>
+                <select class="form-select" id="type" name="type">
+                    <option value="">All Genres</option>
+                    {% for t in types %}
+                    <option value="{{ t.WS_TYPE_ID }}" {% if current_type == t.WS_TYPE_ID %}selected{% endif %}>
+                        {{ t.WS_TYPE_NAME }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="language" class="form-label">Language</label>
+                <select class="form-select" id="language" name="language">
+                    <option value="">All Languages</option>
+                    {% for lang in languages %}
+                    <option value="{{ lang.LANGUAGE }}" {% if current_language == lang.LANGUAGE %}selected{% endif %}>
+                        {{ lang.LANGUAGE }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="country" class="form-label">Origin</label>
+                <select class="form-select" id="country" name="country">
+                    <option value="">All Countries</option>
+                    {% for c in countries %}
+                    <option value="{{ c.COUNTRY_OF_ORIGIN }}" {% if current_country == c.COUNTRY_OF_ORIGIN %}selected{% endif %}>
+                        {{ c.COUNTRY_OF_ORIGIN }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-accent me-2">
+                    <i class="bi bi-search me-1"></i>Filter
+                </button>
+                <a href="{{ url_for('customer.home') }}" class="btn btn-dark">Reset</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Series Grid -->
+<div class="row">
+    {% for series in series_list %}
+    <div class="col-md-6 col-lg-4 mb-4 stagger-item">
+        <div class="card series-card h-100">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <a href="{{ url_for('customer.series_detail', ws_id=series.WS_ID) }}">
+                        {{ series.WS_NAME }}
+                    </a>
+                </h5>
+                
+                <div class="mb-2">
+                    {% if series.TYPES %}
+                    {% for type in series.TYPES.split(', ') %}
+                    <span class="badge bg-dark me-1">{{ type }}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <p class="text-muted small mb-2">
+                    <i class="bi bi-translate me-1"></i>{{ series.LANGUAGE }} |
+                    <i class="bi bi-geo-alt me-1"></i>{{ series.COUNTRY_OF_ORIGIN }}
+                </p>
+                
+                <p class="text-muted small mb-3">
+                    <i class="bi bi-building me-1"></i>{{ series.PRODUCTION_HOUSE or 'Unknown' }}
+                </p>
+                
+                <div class="series-meta d-flex justify-content-between align-items-center">
+                    <div class="series-rating">
+                        <i class="bi bi-star-fill"></i>
+                        <span class="fw-bold">{{ "%.1f"|format(series.AVG_RATING|float) }}</span>
+                        <span class="text-muted small">({{ series.RATING_COUNT }})</span>
+                    </div>
+                    <div class="text-muted small">
+                        <i class="bi bi-eye me-1"></i>{{ "{:,}".format(series.TOTAL_VIEWERS|int) }} views
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top border-secondary">
+                <a href="{{ url_for('customer.series_detail', ws_id=series.WS_ID) }}" class="btn btn-outline-accent btn-sm w-100">
+                    View Details <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="col-12">
+        <div class="text-center py-5">
+            <i class="bi bi-film display-1 text-muted"></i>
+            <h4 class="mt-3">No series found</h4>
+            <p class="text-muted">Try adjusting your filters or search query</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Pagination -->
+{% if total_pages > 1 %}
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        <li class="page-item {% if page == 1 %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page - 1 }}&q={{ search_query }}&type={{ current_type }}&language={{ current_language }}&country={{ current_country }}">
+                <i class="bi bi-chevron-left"></i>
+            </a>
+        </li>
+        {% for p in range(1, total_pages + 1) %}
+        <li class="page-item {% if p == page %}active{% endif %}">
+            <a class="page-link" href="?page={{ p }}&q={{ search_query }}&type={{ current_type }}&language={{ current_language }}&country={{ current_country }}">{{ p }}</a>
+        </li>
+        {% endfor %}
+        <li class="page-item {% if page == total_pages %}disabled{% endif %}">
+            <a class="page-link" href="?page={{ page + 1 }}&q={{ search_query }}&type={{ current_type }}&language={{ current_language }}&country={{ current_country }}">
+                <i class="bi bi-chevron-right"></i>
+            </a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

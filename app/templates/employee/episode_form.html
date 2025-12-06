@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if episode else 'Add' }} Episode{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-{{ 'pencil' if episode else 'plus-circle' }} me-2 text-accent"></i>{{ 'Edit' if episode else 'Add' }} Episode</h1>
+    <p class="lead">{{ series.WS_NAME }}</p>
+</div>
+<div class="row justify-content-center"><div class="col-lg-6">
+<div class="card"><div class="card-body">
+<form method="POST">
+    <div class="mb-3">
+        <label for="ep_name" class="form-label">Episode Name *</label>
+        <input type="text" class="form-control" id="ep_name" name="ep_name" value="{{ episode.EP_NAME if episode else '' }}" required maxlength="30">
+    </div>
+    <div class="mb-3">
+        <label for="total_viewers" class="form-label">Total Viewers</label>
+        <input type="number" class="form-control" id="total_viewers" name="total_viewers" value="{{ episode.TOTAL_VIEWERS if episode else 0 }}" min="0">
+    </div>
+    <div class="mb-3">
+        <label for="tech_interrupt" class="form-label">Technical Interruption</label>
+        <select class="form-select" id="tech_interrupt" name="tech_interrupt">
+            <option value="No" {% if not episode or episode.TECH_INTERRUPT == 'No' %}selected{% endif %}>No</option>
+            <option value="Yes" {% if episode and episode.TECH_INTERRUPT == 'Yes' %}selected{% endif %}>Yes</option>
+        </select>
+    </div>
+    <div class="d-flex justify-content-between">
+        <a href="{{ url_for('employee.list_episodes', ws_id=series.WS_ID) }}" class="btn btn-dark">Cancel</a>
+        <button type="submit" class="btn btn-accent">{{ 'Update' if episode else 'Create' }}</button>
+    </div>
+</form>
+</div></div>
+</div></div>
+{% endblock %}

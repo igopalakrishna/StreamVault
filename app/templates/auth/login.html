@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-5">
+        <div class="card fade-in">
+            <div class="card-header text-center">
+                <h3 class="mb-0"><i class="bi bi-box-arrow-in-right me-2 text-accent"></i>Welcome Back</h3>
+            </div>
+            <div class="card-body p-4">
+                <form method="POST" action="{{ url_for('auth.login') }}">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary">
+                                <i class="bi bi-person text-muted"></i>
+                            </span>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   required autofocus placeholder="Enter your username">
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-dark border-secondary">
+                                <i class="bi bi-lock text-muted"></i>
+                            </span>
+                            <input type="password" class="form-control" id="password" name="password" 
+                                   required placeholder="Enter your password">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-accent w-100 mb-3">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                    </button>
+                </form>
+                
+                <hr class="my-4">
+                
+                <p class="text-center text-muted mb-0">
+                    Don't have an account? 
+                    <a href="{{ url_for('auth.register') }}" class="text-accent">Sign up here</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Demo Credentials -->
+        <div class="card mt-4 border-warning">
+            <div class="card-body">
+                <h6 class="text-gold mb-3"><i class="bi bi-info-circle me-2"></i>Demo Credentials</h6>
+                <div class="row">
+                    <div class="col-6">
+                        <p class="mb-1 small text-muted">Admin/Employee:</p>
+                        <code>admin / Password123</code>
+                    </div>
+                    <div class="col-6">
+                        <p class="mb-1 small text-muted">Customer:</p>
+                        <code>johnsmith / Password123</code>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Edit' if series else 'Create' }} Web Series{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>
+        <i class="bi bi-{{ 'pencil' if series else 'plus-circle' }} me-2 text-accent"></i>
+        {{ 'Edit' if series else 'Create' }} Web Series
+    </h1>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST">
+            <div class="row">
+                <div class="col-md-8 mb-3">
+                    <label for="ws_name" class="form-label">Series Name *</label>
+                    <input type="text" class="form-control" id="ws_name" name="ws_name" 
+                           value="{{ series.WS_NAME if series else '' }}" required maxlength="50">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="num_of_eps" class="form-label">Number of Episodes *</label>
+                    <input type="number" class="form-control" id="num_of_eps" name="num_of_eps" 
+                           value="{{ series.NUM_OF_EPS if series else '1' }}" required min="1">
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <label for="language" class="form-label">Language *</label>
+                    <input type="text" class="form-control" id="language" name="language" 
+                           value="{{ series.LANGUAGE if series else '' }}" required maxlength="30">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="country_of_origin" class="form-label">Country of Origin *</label>
+                    <input type="text" class="form-control" id="country_of_origin" name="country_of_origin" 
+                           value="{{ series.COUNTRY_OF_ORIGIN if series else '' }}" required maxlength="30">
+                </div>
+                <div class="col-md-4 mb-3">
+                    <label for="release_date" class="form-label">Release Date *</label>
+                    <input type="date" class="form-control" id="release_date" name="release_date" 
+                           value="{{ series.RELEASE_DATE.strftime('%Y-%m-%d') if series and series.RELEASE_DATE else '' }}" required>
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="ph_id" class="form-label">Production House *</label>
+                <select class="form-select" id="ph_id" name="ph_id" required>
+                    <option value="">Select Production House...</option>
+                    {% for ph in production_houses %}
+                    <option value="{{ ph.PH_ID }}" {% if series and series.PH_ID == ph.PH_ID %}selected{% endif %}>
+                        {{ ph.PH_NAME }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            
+            <hr class="my-4">
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Genres/Types</label>
+                    <div class="bg-darker p-3 rounded" style="max-height: 200px; overflow-y: auto;">
+                        {% for t in types %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="types" value="{{ t.WS_TYPE_ID }}" 
+                                   id="type{{ t.WS_TYPE_ID }}" {% if current_types and t.WS_TYPE_ID in current_types %}checked{% endif %}>
+                            <label class="form-check-label" for="type{{ t.WS_TYPE_ID }}">{{ t.WS_TYPE_NAME }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Release Countries</label>
+                    <div class="bg-darker p-3 rounded" style="max-height: 200px; overflow-y: auto;">
+                        {% for c in countries %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="release_countries" value="{{ c.COUNTRY_ID }}" 
+                                   id="country{{ c.COUNTRY_ID }}" {% if current_countries and c.COUNTRY_ID in current_countries %}checked{% endif %}>
+                            <label class="form-check-label" for="country{{ c.COUNTRY_ID }}">{{ c.COUNTRY_NAME }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Dubbing Languages</label>
+                    <div class="bg-darker p-3 rounded" style="max-height: 200px; overflow-y: auto;">
+                        {% for lang in dubbing_langs %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="dubbing_langs" value="{{ lang.LANG_ID }}" 
+                                   id="dub{{ lang.LANG_ID }}" {% if current_dubbing and lang.LANG_ID in current_dubbing %}checked{% endif %}>
+                            <label class="form-check-label" for="dub{{ lang.LANG_ID }}">{{ lang.LANG_NAME }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Subtitle Languages</label>
+                    <div class="bg-darker p-3 rounded" style="max-height: 200px; overflow-y: auto;">
+                        {% for lang in subtitle_langs %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="subtitle_langs" value="{{ lang.LANG_ID }}" 
+                                   id="sub{{ lang.LANG_ID }}" {% if current_subtitles and lang.LANG_ID in current_subtitles %}checked{% endif %}>
+                            <label class="form-check-label" for="sub{{ lang.LANG_ID }}">{{ lang.LANG_NAME }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <hr class="my-4">
+            
+            <div class="d-flex justify-content-between">
+                <a href="{{ url_for('employee.list_series') }}" class="btn btn-dark">Cancel</a>
+                <button type="submit" class="btn btn-accent">
+                    <i class="bi bi-check-lg me-2"></i>{{ 'Update' if series else 'Create' }} Series
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

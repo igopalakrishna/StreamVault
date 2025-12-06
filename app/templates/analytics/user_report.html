@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}User Engagement Report{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-people me-2 text-accent"></i>User Engagement Report</h1>
+    <p class="lead">User activity and feedback statistics</p>
+</div>
+<div class="card"><div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-hover mb-0">
+<thead><tr>
+    <th>User</th><th>Country</th><th>Member Since</th><th>Reviews</th><th>Avg Rating Given</th><th>Last Activity</th>
+</tr></thead>
+<tbody>
+{% for u in users %}
+<tr>
+    <td>{{ u.FIRST_NAME }} {{ u.LAST_NAME }}</td>
+    <td>{{ u.COUNTRY_NAME or 'N/A' }}</td>
+    <td>{{ u.DATE_CREATED.strftime('%Y-%m-%d') if u.DATE_CREATED else 'N/A' }}</td>
+    <td>{{ u.FEEDBACK_COUNT }}</td>
+    <td><span class="text-gold">{{ "%.2f"|format(u.AVG_RATING_GIVEN|float) if u.AVG_RATING_GIVEN else 'N/A' }}</span></td>
+    <td>{{ u.LAST_FEEDBACK_DATE.strftime('%Y-%m-%d') if u.LAST_FEEDBACK_DATE else 'N/A' }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div></div></div>
+<a href="{{ url_for('analytics.dashboard') }}" class="btn btn-dark mt-3"><i class="bi bi-arrow-left me-2"></i>Back to Dashboard</a>
+{% endblock %}

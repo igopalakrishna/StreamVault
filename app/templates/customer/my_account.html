@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-person-circle me-2 text-accent"></i>My Account</h1>
+    <p class="lead">Manage your profile and view your activity</p>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <!-- Profile Info -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Profile Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('customer.update_account') }}">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Name</label>
+                            <p class="form-control-plaintext text-light">
+                                {{ user.FIRST_NAME }} {{ user.MIDDLE_NAME or '' }} {{ user.LAST_NAME }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Email</label>
+                            <p class="form-control-plaintext text-light">{{ user.EMAIL_ADDR }}</p>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <h6 class="text-accent mb-3">Address</h6>
+                    <div class="mb-3">
+                        <label for="street_addr" class="form-label">Street Address</label>
+                        <input type="text" class="form-control" id="street_addr" name="street_addr" 
+                               value="{{ user.STREET_ADDR }}" required>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input type="text" class="form-control" id="city" name="city" 
+                                   value="{{ user.CITY }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="state" class="form-label">State</label>
+                            <input type="text" class="form-control" id="state" name="state" 
+                                   value="{{ user.STATE }}" required>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="postal_code" class="form-label">Postal Code</label>
+                            <input type="text" class="form-control" id="postal_code" name="postal_code" 
+                                   value="{{ user.POSTAL_CODE }}" required maxlength="5">
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="country" class="form-label">Country</label>
+                            <input type="text" class="form-control" id="country" name="country" 
+                                   value="{{ user.COUNTRY }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="country_id" class="form-label">Country (select)</label>
+                            <select class="form-select" id="country_id" name="country_id" required>
+                                {% for c in countries %}
+                                <option value="{{ c.COUNTRY_ID }}" {% if c.COUNTRY_ID == user.COUNTRY_ID %}selected{% endif %}>
+                                    {{ c.COUNTRY_NAME }}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <hr class="my-4">
+                    
+                    <h6 class="text-accent mb-3">Subscription</h6>
+                    <div class="mb-3">
+                        <label for="monthly_subscription" class="form-label">Monthly Plan</label>
+                        <select class="form-select" id="monthly_subscription" name="monthly_subscription">
+                            <option value="9.99" {% if user.MONTHLY_SUBSCRIPTION == 9.99 %}selected{% endif %}>
+                                Basic - $9.99/month
+                            </option>
+                            <option value="14.99" {% if user.MONTHLY_SUBSCRIPTION == 14.99 %}selected{% endif %}>
+                                Standard - $14.99/month
+                            </option>
+                            <option value="19.99" {% if user.MONTHLY_SUBSCRIPTION == 19.99 %}selected{% endif %}>
+                                Premium - $19.99/month
+                            </option>
+                        </select>
+                    </div>
+                    
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-accent">
+                            <i class="bi bi-check-lg me-1"></i>Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <!-- Account Stats -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h6 class="mb-0">Account Stats</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Member Since</span>
+                    <span>{{ user.DATE_CREATED.strftime('%b %Y') if user.DATE_CREATED else 'N/A' }}</span>
+                </div>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Reviews Written</span>
+                    <span>{{ feedback_history|length }}</span>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <span class="text-muted">Subscription</span>
+                    <span class="text-gold">${{ "%.2f"|format(user.MONTHLY_SUBSCRIPTION) }}/mo</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Reviews -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Your Reviews</h6>
+            </div>
+            <div class="card-body">
+                {% for fb in feedback_history[:5] %}
+                <div class="mb-3 pb-3 border-bottom border-secondary">
+                    <div class="d-flex justify-content-between">
+                        <a href="{{ url_for('customer.series_detail', ws_id=fb.WS_ID) }}">{{ fb.WS_NAME }}</a>
+                        <span class="text-gold">
+                            {% for i in range(fb.RATING) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                        </span>
+                    </div>
+                    <small class="text-muted">{{ fb.DATE_RECORDED.strftime('%b %d, %Y') }}</small>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">No reviews yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

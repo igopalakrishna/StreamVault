@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Producer-Production House Associations{% endblock %}
+{% block content %}
+<div class="page-header d-flex justify-content-between align-items-center">
+    <div><h1><i class="bi bi-link-45deg me-2 text-accent"></i>Associations</h1></div>
+    <a href="{{ url_for('employee.create_association') }}" class="btn btn-accent"><i class="bi bi-plus-circle me-2"></i>Add</a>
+</div>
+<div class="card"><div class="card-body p-0">
+<table class="table table-hover mb-0">
+<thead><tr><th>Producer</th><th>Production House</th><th>Alliance Date</th><th>End Date</th><th>Actions</th></tr></thead>
+<tbody>
+{% for a in associations %}
+<tr>
+    <td>{{ a.FIRST_NAME }} {{ a.LAST_NAME }}</td>
+    <td>{{ a.PH_NAME }}</td>
+    <td>{{ a.ALLIANCE_DATE }}</td>
+    <td>{{ a.END_DATE }}</td>
+    <td>
+        <form method="POST" action="{{ url_for('employee.delete_association', producer_id=a.PRODUCER_ID, ph_id=a.PH_ID) }}" class="d-inline" onsubmit="return confirm('Delete?')">
+            <button type="submit" class="btn btn-sm btn-dark text-danger"><i class="bi bi-trash"></i></button>
+        </form>
+    </td>
+</tr>
+{% else %}
+<tr><td colspan="5" class="text-center text-muted py-4">No associations.</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div></div>
+{% endblock %}

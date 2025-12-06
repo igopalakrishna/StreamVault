@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Series Performance Report{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-table me-2 text-accent"></i>Series Performance Report</h1>
+    <p class="lead">Comprehensive metrics for all web series</p>
+</div>
+<div class="card"><div class="card-body p-0">
+<div class="table-responsive">
+<table class="table table-hover mb-0">
+<thead><tr>
+    <th>Series</th><th>Language</th><th>Origin</th><th>Release</th>
+    <th>Episodes</th><th>Viewers</th><th>Avg Rating</th><th>Ratings</th><th>Production House</th>
+</tr></thead>
+<tbody>
+{% for s in series_list %}
+<tr>
+    <td><a href="{{ url_for('customer.series_detail', ws_id=s.WS_ID) }}">{{ s.WS_NAME }}</a></td>
+    <td>{{ s.LANGUAGE }}</td>
+    <td>{{ s.COUNTRY_OF_ORIGIN }}</td>
+    <td>{{ s.RELEASE_DATE.strftime('%Y-%m-%d') if s.RELEASE_DATE else 'N/A' }}</td>
+    <td>{{ s.ACTUAL_EPISODES }} / {{ s.NUM_OF_EPS }}</td>
+    <td>{{ "{:,}".format(s.TOTAL_VIEWERS|int) }}</td>
+    <td><span class="text-gold">{{ "%.2f"|format(s.AVG_RATING|float) }}</span></td>
+    <td>{{ s.RATING_COUNT }}</td>
+    <td>{{ s.PRODUCTION_HOUSE }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</div></div></div>
+<a href="{{ url_for('analytics.dashboard') }}" class="btn btn-dark mt-3"><i class="bi bi-arrow-left me-2"></i>Back to Dashboard</a>
+{% endblock %}

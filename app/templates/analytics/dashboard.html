@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-graph-up-arrow me-2 text-accent"></i>Analytics Dashboard</h1>
+    <p class="lead">Data visualization and insights for your streaming platform</p>
+    <span class="badge bg-gold">EXTRA CREDIT: Chart.js Visualization + Query Caching</span>
+</div>
+
+<div class="row">
+    <!-- Top Series by Viewers -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-container">
+            <h5><i class="bi bi-eye me-2 text-accent"></i>Top 10 Series by Viewers</h5>
+            <canvas id="viewersChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Top Series by Rating -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-container">
+            <h5><i class="bi bi-star me-2 text-gold"></i>Top 10 Series by Rating</h5>
+            <canvas id="ratingChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Series by Country (Pie) -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-container">
+            <h5><i class="bi bi-globe me-2 text-accent"></i>Series Distribution by Country</h5>
+            <canvas id="countryChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Series by Genre (Doughnut) -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-container">
+            <h5><i class="bi bi-tags me-2 text-accent"></i>Series Distribution by Genre</h5>
+            <canvas id="genreChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Rating Distribution -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-container">
+            <h5><i class="bi bi-bar-chart me-2 text-accent"></i>Rating Distribution</h5>
+            <canvas id="ratingDistChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Production House Stats -->
+    <div class="col-lg-6 mb-4">
+        <div class="chart-container">
+            <h5><i class="bi bi-building me-2 text-accent"></i>Production House Performance</h5>
+            <canvas id="phChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Reports Links -->
+<div class="row mt-4">
+    <div class="col-md-6 mb-3">
+        <a href="{{ url_for('analytics.series_performance_report') }}" class="btn btn-outline-accent btn-lg w-100">
+            <i class="bi bi-table me-2"></i>Series Performance Report
+        </a>
+    </div>
+    <div class="col-md-6 mb-3">
+        <a href="{{ url_for('analytics.user_engagement_report') }}" class="btn btn-outline-accent btn-lg w-100">
+            <i class="bi bi-people me-2"></i>User Engagement Report
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// Chart.js default configuration for dark theme
+Chart.defaults.color = '#a3a3a3';
+Chart.defaults.borderColor = '#262626';
+
+const chartColors = [
+    '#e63946', '#f4a261', '#2a9d8f', '#264653', '#e9c46a',
+    '#457b9d', '#1d3557', '#a8dadc', '#f1faee', '#ff6b6b'
+];
+
+// Fetch and render Top Series by Viewers
+fetch('{{ url_for("analytics.top_series_by_viewers") }}?n=10')
+    .then(r => r.json())
+    .then(data => {
+        new Chart(document.getElementById('viewersChart'), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Total Viewers',
+                    data: data.data,
+                    backgroundColor: '#e63946',
+                    borderColor: '#e63946',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: '#262626' } },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+    });
+
+// Fetch and render Top Series by Rating
+fetch('{{ url_for("analytics.top_series_by_rating") }}?n=10')
+    .then(r => r.json())
+    .then(data => {
+        new Chart(document.getElementById('ratingChart'), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Average Rating',
+                    data: data.data,
+                    backgroundColor: '#d4af37',
+                    borderColor: '#d4af37',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                indexAxis: 'y',
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { color: '#262626' }, max: 5 },
+                    y: { grid: { display: false } }
+                }
+            }
+        });
+    });
+
+// Series by Country (Pie)
+fetch('{{ url_for("analytics.series_by_country") }}')
+    .then(r => r.json())
+    .then(data => {
+        new Chart(document.getElementById('countryChart'), {
+            type: 'pie',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.data,
+                    backgroundColor: chartColors
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+    });
+
+// Series by Genre (Doughnut)
+fetch('{{ url_for("analytics.series_by_type") }}')
+    .then(r => r.json())
+    .then(data => {
+        new Chart(document.getElementById('genreChart'), {
+            type: 'doughnut',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    data: data.data,
+                    backgroundColor: chartColors
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'right' }
+                }
+            }
+        });
+    });
+
+// Rating Distribution
+fetch('{{ url_for("analytics.rating_distribution") }}')
+    .then(r => r.json())
+    .then(data => {
+        new Chart(document.getElementById('ratingDistChart'), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Number of Ratings',
+                    data: data.data,
+                    backgroundColor: ['#ef4444', '#f97316', '#eab308', '#84cc16', '#22c55e']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { grid: { color: '#262626' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    });
+
+// Production House Stats
+fetch('{{ url_for("analytics.production_house_stats") }}')
+    .then(r => r.json())
+    .then(data => {
+        new Chart(document.getElementById('phChart'), {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Series Count',
+                    data: data.series_counts,
+                    backgroundColor: '#e63946'
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { grid: { color: '#262626' } },
+                    x: { grid: { display: false } }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

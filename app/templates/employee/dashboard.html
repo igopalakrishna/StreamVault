@@ -1,0 +1,198 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1><i class="bi bi-speedometer2 me-2 text-accent"></i>Admin Dashboard</h1>
+    <p class="lead">Overview of your streaming platform</p>
+</div>
+
+<!-- Stats Grid -->
+<div class="row mb-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-film"></i></div>
+            <div class="stat-value">{{ stats.series_count }}</div>
+            <div class="stat-label">Web Series</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-collection-play"></i></div>
+            <div class="stat-value">{{ stats.episode_count }}</div>
+            <div class="stat-label">Episodes</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-people"></i></div>
+            <div class="stat-value">{{ stats.user_count }}</div>
+            <div class="stat-label">Users</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-chat-quote"></i></div>
+            <div class="stat-value">{{ stats.feedback_count }}</div>
+            <div class="stat-label">Reviews</div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4 col-sm-6 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-file-earmark-text"></i></div>
+            <div class="stat-value">{{ stats.contract_count }}</div>
+            <div class="stat-label">Contracts</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-building"></i></div>
+            <div class="stat-value">{{ stats.ph_count }}</div>
+            <div class="stat-label">Production Houses</div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-6 mb-3">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bi bi-person-video3"></i></div>
+            <div class="stat-value">{{ stats.producer_count }}</div>
+            <div class="stat-label">Producers</div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Quick Actions -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-lightning me-2"></i>Quick Actions</h5>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('employee.create_series') }}" class="btn btn-outline-accent">
+                        <i class="bi bi-plus-circle me-2"></i>Add New Series
+                    </a>
+                    <a href="{{ url_for('employee.create_production_house') }}" class="btn btn-outline-accent">
+                        <i class="bi bi-building-add me-2"></i>Add Production House
+                    </a>
+                    <a href="{{ url_for('employee.create_producer') }}" class="btn btn-outline-accent">
+                        <i class="bi bi-person-plus me-2"></i>Add Producer
+                    </a>
+                    <a href="{{ url_for('employee.create_contract') }}" class="btn btn-outline-accent">
+                        <i class="bi bi-file-earmark-plus me-2"></i>Create Contract
+                    </a>
+                    <a href="{{ url_for('analytics.dashboard') }}" class="btn btn-gold">
+                        <i class="bi bi-graph-up me-2"></i>View Analytics
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Recent Series -->
+    <div class="col-lg-6 mb-4">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Recent Series</h5>
+                <a href="{{ url_for('employee.list_series') }}" class="btn btn-sm btn-dark">View All</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Series</th>
+                                <th>Release Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for s in recent_series %}
+                            <tr>
+                                <td>{{ s.WS_NAME }}</td>
+                                <td>{{ s.RELEASE_DATE.strftime('%Y-%m-%d') if s.RELEASE_DATE else 'N/A' }}</td>
+                                <td>
+                                    <a href="{{ url_for('employee.edit_series', ws_id=s.WS_ID) }}" 
+                                       class="btn btn-sm btn-dark">Edit</a>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="3" class="text-muted text-center">No series yet</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Management Links -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-grid me-2"></i>Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ url_for('employee.list_series') }}" class="text-decoration-none">
+                            <div class="p-3 bg-darker rounded text-center">
+                                <i class="bi bi-film display-6 text-accent"></i>
+                                <h6 class="mt-2">Web Series</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ url_for('employee.list_production_houses') }}" class="text-decoration-none">
+                            <div class="p-3 bg-darker rounded text-center">
+                                <i class="bi bi-building display-6 text-accent"></i>
+                                <h6 class="mt-2">Production Houses</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ url_for('employee.list_producers') }}" class="text-decoration-none">
+                            <div class="p-3 bg-darker rounded text-center">
+                                <i class="bi bi-person-video3 display-6 text-accent"></i>
+                                <h6 class="mt-2">Producers</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ url_for('employee.list_contracts') }}" class="text-decoration-none">
+                            <div class="p-3 bg-darker rounded text-center">
+                                <i class="bi bi-file-earmark-text display-6 text-accent"></i>
+                                <h6 class="mt-2">Contracts</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ url_for('employee.list_associations') }}" class="text-decoration-none">
+                            <div class="p-3 bg-darker rounded text-center">
+                                <i class="bi bi-link-45deg display-6 text-accent"></i>
+                                <h6 class="mt-2">Associations</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <a href="{{ url_for('auth.create_employee') }}" class="text-decoration-none">
+                            <div class="p-3 bg-darker rounded text-center">
+                                <i class="bi bi-person-badge display-6 text-accent"></i>
+                                <h6 class="mt-2">Create Employee</h6>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

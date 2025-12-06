@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if contract else 'Add' }} Contract{% endblock %}
+{% block content %}
+<div class="page-header"><h1><i class="bi bi-file-earmark-text me-2 text-accent"></i>{{ 'Edit' if contract else 'Add' }} Contract</h1></div>
+<div class="row justify-content-center"><div class="col-lg-6"><div class="card"><div class="card-body">
+<form method="POST">
+    <div class="mb-3"><label class="form-label">Web Series *</label>
+    <select class="form-select" name="ws_id" required>
+        <option value="">Select...</option>
+        {% for s in series %}
+        <option value="{{ s.WS_ID }}" {% if contract and contract.WS_ID == s.WS_ID %}selected{% endif %}>{{ s.WS_NAME }}</option>
+        {% endfor %}
+    </select></div>
+    <div class="mb-3"><label class="form-label">Per Episode Charge ($) *</label>
+    <input type="number" class="form-control" name="per_ep_charge" value="{{ contract.PER_EP_CHARGE if contract else '' }}" required min="0.01" step="0.01">
+    <div class="form-text">Must be positive (CHECK constraint)</div></div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Start Date *</label><input type="date" class="form-control" name="contract_st_date" value="{{ contract.CONTRACT_ST_DATE.strftime('%Y-%m-%d') if contract and contract.CONTRACT_ST_DATE else '' }}" required></div>
+        <div class="col-md-6 mb-3"><label class="form-label">End Date *</label><input type="date" class="form-control" name="contract_end_date" value="{{ contract.CONTRACT_END_DATE.strftime('%Y-%m-%d') if contract and contract.CONTRACT_END_DATE else '' }}" required>
+        <div class="form-text">Must be after start date</div></div>
+    </div>
+    <div class="d-flex justify-content-between">
+        <a href="{{ url_for('employee.list_contracts') }}" class="btn btn-dark">Cancel</a>
+        <button type="submit" class="btn btn-accent">{{ 'Update' if contract else 'Create' }}</button>
+    </div>
+</form>
+</div></div></div></div>
+{% endblock %}

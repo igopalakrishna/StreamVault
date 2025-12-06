@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if producer else 'Add' }} Producer{% endblock %}
+{% block content %}
+<div class="page-header"><h1><i class="bi bi-person-video3 me-2 text-accent"></i>{{ 'Edit' if producer else 'Add' }} Producer</h1></div>
+<div class="row justify-content-center"><div class="col-lg-8"><div class="card"><div class="card-body">
+<form method="POST">
+    <div class="row">
+        <div class="col-md-4 mb-3"><label class="form-label">First Name *</label><input type="text" class="form-control" name="first_name" value="{{ producer.FIRST_NAME if producer else '' }}" required></div>
+        <div class="col-md-4 mb-3"><label class="form-label">Middle Name</label><input type="text" class="form-control" name="middle_name" value="{{ producer.MIDDLE_NAME if producer else '' }}"></div>
+        <div class="col-md-4 mb-3"><label class="form-label">Last Name *</label><input type="text" class="form-control" name="last_name" value="{{ producer.LAST_NAME if producer else '' }}" required></div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 mb-3"><label class="form-label">Email *</label><input type="email" class="form-control" name="email_addr" value="{{ producer.EMAIL_ADDR if producer else '' }}" required></div>
+        <div class="col-md-6 mb-3"><label class="form-label">Phone *</label><input type="text" class="form-control" name="phone_number" value="{{ producer.PHONE_NUMBER if producer else '' }}" required></div>
+    </div>
+    <div class="mb-3"><label class="form-label">Street Address *</label><input type="text" class="form-control" name="street_addr" value="{{ producer.STREET_ADDR if producer else '' }}" required></div>
+    <div class="row">
+        <div class="col-md-4 mb-3"><label class="form-label">City *</label><input type="text" class="form-control" name="city" value="{{ producer.CITY if producer else '' }}" required></div>
+        <div class="col-md-4 mb-3"><label class="form-label">State *</label><input type="text" class="form-control" name="state" value="{{ producer.STATE if producer else '' }}" required></div>
+        <div class="col-md-4 mb-3"><label class="form-label">Postal *</label><input type="text" class="form-control" name="postal_code" value="{{ producer.POSTAL_CODE if producer else '' }}" required maxlength="5"></div>
+    </div>
+    <div class="mb-3"><label class="form-label">Country *</label><input type="text" class="form-control" name="country" value="{{ producer.COUNTRY if producer else '' }}" required></div>
+    <div class="d-flex justify-content-between">
+        <a href="{{ url_for('employee.list_producers') }}" class="btn btn-dark">Cancel</a>
+        <button type="submit" class="btn btn-accent">{{ 'Update' if producer else 'Create' }}</button>
+    </div>
+</form>
+</div></div></div></div>
+{% endblock %}
