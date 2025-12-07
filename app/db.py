@@ -5,13 +5,23 @@ Database Module
 This module provides:
 1. Database connection management
 2. Prepared statement execution (SQL Injection Protection)
-3. Transaction handling with commit/rollback
+3. Transaction handling with commit/rollback and DEADLOCK PROTECTION
 4. Helper functions for common operations
 
 SECURITY NOTES:
 - ALL queries use parameterized prepared statements to prevent SQL injection
 - User input is NEVER concatenated into SQL strings
 - Transactions ensure data consistency for multi-step operations
+
+DEADLOCK PROTECTION STRATEGY:
+This module implements application-level deadlock protection:
+1. Automatic retry on deadlock (MySQL error 1213) or lock wait timeout (1205)
+2. Configurable retry attempts with exponential backoff
+3. Transactions are kept short to minimize lock duration
+4. Tables should be accessed in consistent order across the application
+
+The retry mechanism ensures transient deadlocks don't cause user-visible errors
+while the prevention strategies minimize their occurrence.
 """
 
 import mysql.connector
@@ -19,6 +29,28 @@ from mysql.connector import Error, pooling
 from flask import current_app, g
 from contextlib import contextmanager
 import time
+import random
+
+# ============================================================================
+# DEADLOCK PROTECTION CONSTANTS
+# ============================================================================
+
+# MySQL error codes for deadlock and lock wait timeout
+MYSQL_ERROR_DEADLOCK = 1213          # ER_LOCK_DEADLOCK
+MYSQL_ERROR_LOCK_WAIT_TIMEOUT = 1205 # ER_LOCK_WAIT_TIMEOUT
+
+# Retry configuration
+DEADLOCK_MAX_RETRIES = 3             # Maximum number of retry attempts
+DEADLOCK_RETRY_BASE_DELAY = 0.1      # Base delay between retries (seconds)
+DEADLOCK_RETRY_MAX_DELAY = 1.0       # Maximum delay between retries (seconds)
+
+
+class DeadlockError(Exception):
+    """
+    Custom exception raised when a transaction fails due to deadlock
+    after all retry attempts are exhausted.
+    """
+    pass
 
 # Simple in-memory cache for extra credit
 _query_cache = {}
@@ -196,44 +228,140 @@ def execute_update(query, params=None):
         cursor.close()
 
 
+def _is_deadlock_error(exception):
+    """
+    Check if an exception is a MySQL deadlock or lock wait timeout error.
+    
+    Args:
+        exception: The exception to check
+        
+    Returns:
+        bool: True if the exception is a deadlock-related error
+    """
+    if isinstance(exception, Error):
+        return exception.errno in (MYSQL_ERROR_DEADLOCK, MYSQL_ERROR_LOCK_WAIT_TIMEOUT)
+    return False
+
+
+def _calculate_retry_delay(attempt):
+    """
+    Calculate delay before retry using exponential backoff with jitter.
+    
+    Exponential backoff helps reduce contention by spreading out retry attempts.
+    Jitter (randomization) prevents multiple transactions from retrying simultaneously.
+    
+    Args:
+        attempt: Current attempt number (0-indexed)
+        
+    Returns:
+        float: Delay in seconds before next retry
+    """
+    # Exponential backoff: delay = base * 2^attempt
+    delay = DEADLOCK_RETRY_BASE_DELAY * (2 ** attempt)
+    
+    # Add jitter (±25% randomization)
+    jitter = delay * 0.25 * (random.random() * 2 - 1)
+    delay = delay + jitter
+    
+    # Cap at maximum delay
+    return min(delay, DEADLOCK_RETRY_MAX_DELAY)
+
+
 @contextmanager
 def transaction():
     """
-    Context manager for database transactions.
+    Context manager for database transactions WITH DEADLOCK PROTECTION.
     
     Ensures atomicity for multi-step operations:
     - All operations succeed (COMMIT)
     - Or all operations are rolled back (ROLLBACK)
     
-    DEADLOCK PREVENTION STRATEGY:
-    1. Keep transactions short - do minimal work inside transaction
-    2. Access tables in consistent order across the application
-    3. Use appropriate isolation level
+    DEADLOCK PROTECTION:
+    This context manager implements automatic retry-on-deadlock logic:
+    - If MySQL raises error 1213 (deadlock) or 1205 (lock wait timeout),
+      the transaction is rolled back and retried
+    - Up to DEADLOCK_MAX_RETRIES attempts are made (default: 3)
+    - Exponential backoff with jitter is used between retries
+    - If all retries fail, a DeadlockError is raised
+    
+    DEADLOCK PREVENTION STRATEGIES:
+    1. Keep transactions SHORT - do minimal work inside the context
+    2. Access tables in CONSISTENT ORDER across the application
+       (e.g., always GRN_USER_ACCOUNT before GRN_LOGIN)
+    3. Use appropriate ISOLATION LEVEL (InnoDB default: REPEATABLE READ)
+    4. Avoid long-running transactions that hold locks
+    5. Use indexes to minimize row locking
     
     Usage:
         with transaction() as cursor:
             cursor.execute("INSERT INTO table1 ...", params1)
             cursor.execute("INSERT INTO table2 ...", params2)
-            # If any exception occurs, both inserts are rolled back
+            # If deadlock occurs, entire block is retried automatically
+            # If any other exception occurs, transaction is rolled back
+    
+    Raises:
+        DeadlockError: If transaction fails due to deadlock after all retries
+        Exception: Any other database or application error
     """
     db = get_db()
-    cursor = db.cursor(dictionary=True)
+    last_exception = None
     
-    try:
-        # Start transaction explicitly
-        db.start_transaction()
-        yield cursor
-        # If we reach here without exception, commit
-        db.commit()
+    for attempt in range(DEADLOCK_MAX_RETRIES):
+        cursor = db.cursor(dictionary=True)
         
-    except Exception as e:
-        # On any error, rollback the transaction
-        db.rollback()
-        current_app.logger.error(f"Transaction rolled back: {e}")
-        raise
-        
-    finally:
-        cursor.close()
+        try:
+            # Start transaction explicitly
+            db.start_transaction()
+            
+            # Yield cursor to the calling code
+            yield cursor
+            
+            # If we reach here without exception, commit
+            db.commit()
+            
+            # Success - exit the retry loop
+            return
+            
+        except Exception as e:
+            # Always rollback on error
+            try:
+                db.rollback()
+            except:
+                pass  # Ignore rollback errors
+            
+            # Check if this is a deadlock error
+            if _is_deadlock_error(e):
+                last_exception = e
+                current_app.logger.warning(
+                    f"Deadlock detected (attempt {attempt + 1}/{DEADLOCK_MAX_RETRIES}): {e}"
+                )
+                
+                # If we have more retries, wait and try again
+                if attempt < DEADLOCK_MAX_RETRIES - 1:
+                    delay = _calculate_retry_delay(attempt)
+                    current_app.logger.info(f"Retrying transaction in {delay:.3f}s...")
+                    time.sleep(delay)
+                    continue
+                else:
+                    # All retries exhausted
+                    current_app.logger.error(
+                        f"Transaction failed after {DEADLOCK_MAX_RETRIES} attempts due to deadlock"
+                    )
+                    raise DeadlockError(
+                        f"Transaction failed after {DEADLOCK_MAX_RETRIES} attempts due to deadlock. "
+                        "Please try again."
+                    ) from e
+            else:
+                # Not a deadlock error - don't retry, just propagate
+                current_app.logger.error(f"Transaction rolled back: {e}")
+                raise
+                
+        finally:
+            cursor.close()
+    
+    # This should not be reached, but just in case
+    if last_exception:
+        raise DeadlockError("Transaction failed due to deadlock") from last_exception
 
 
 def execute_many(query, params_list):

@@ -38,6 +38,23 @@ class Config:
     # Cache settings for extra credit
     CACHE_ENABLED = os.environ.get('CACHE_ENABLED', 'true').lower() == 'true'
     CACHE_TTL = int(os.environ.get('CACHE_TTL') or 300)  # 5 minutes default
+    
+    # =========================================================================
+    # EMAIL CONFIGURATION (for password reset feature)
+    # =========================================================================
+    # Configure these via environment variables for your SMTP provider
+    # Examples: Gmail SMTP, Mailtrap, SendGrid, University SMTP, etc.
+    
+    MAIL_SERVER = os.environ.get('MAIL_SERVER') or 'localhost'
+    MAIL_PORT = int(os.environ.get('MAIL_PORT') or 587)
+    MAIL_USE_TLS = os.environ.get('MAIL_USE_TLS', 'true').lower() == 'true'
+    MAIL_USE_SSL = os.environ.get('MAIL_USE_SSL', 'false').lower() == 'true'
+    MAIL_USERNAME = os.environ.get('MAIL_USERNAME') or None
+    MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or None
+    MAIL_DEFAULT_SENDER = os.environ.get('MAIL_DEFAULT_SENDER') or 'noreply@streamvault.com'
+    
+    # Password reset token expiry (in minutes)
+    PASSWORD_RESET_EXPIRY_MINUTES = int(os.environ.get('PASSWORD_RESET_EXPIRY_MINUTES') or 60)
 
 
 class DevelopmentConfig(Config):

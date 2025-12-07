@@ -15,14 +15,16 @@ SECURITY FEATURES:
 - Transaction support for multi-table operations
 """
 
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, g, current_app
 from functools import wraps
-from .db import execute_query, transaction, execute_update
+from .db import execute_query, transaction, execute_update, execute_insert
 from .security import (
     hash_password, check_password, validate_email, validate_username,
     validate_password_strength, generate_id
 )
-from datetime import datetime
+from .email_utils import send_password_reset_email
+from datetime import datetime, timedelta
+import secrets
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -273,6 +275,174 @@ def logout():
     session.clear()
     flash('You have been logged out.', 'info')
     return redirect(url_for('auth.login'))
+
+
+# ============================================================================
+# FORGOT PASSWORD / RESET PASSWORD
+# ============================================================================
+
+@auth_bp.route('/forgot-password', methods=['GET', 'POST'])
+def forgot_password():
+    """
+    Forgot password page.
+    
+    GET: Display form to enter email or username
+    POST: Generate reset token, store in database, and send email
+    
+    SECURITY:
+    - Always shows generic success message to prevent account enumeration
+    - Token is cryptographically secure (secrets.token_urlsafe)
+    - Token expires after configured time (default: 1 hour)
+    """
+    if 'user_id' in session:
+        return redirect(url_for('customer.home'))
+    
+    if request.method == 'GET':
+        return render_template('auth/forgot_password.html')
+    
+    # POST - process forgot password request
+    email_or_username = request.form.get('email_or_username', '').strip()
+    
+    if not email_or_username:
+        flash('Please enter your email address or username.', 'danger')
+        return render_template('auth/forgot_password.html')
+    
+    # Look up user by email or username
+    # SECURITY: Using parameterized query to prevent SQL injection
+    user = execute_query("""
+        SELECT l.LOGIN_ID, l.USERNAME, u.EMAIL_ADDR, u.FIRST_NAME
+        FROM GRN_LOGIN l
+        JOIN GRN_USER_ACCOUNT u ON l.ACCOUNT_ID = u.ACCOUNT_ID
+        WHERE l.USERNAME = %s OR u.EMAIL_ADDR = %s
+    """, (email_or_username, email_or_username), fetch_one=True)
+    
+    if user:
+        try:
+            # Generate secure random token
+            token = secrets.token_urlsafe(32)
+            
+            # Calculate expiry time
+            expiry_minutes = current_app.config.get('PASSWORD_RESET_EXPIRY_MINUTES', 60)
+            expires_at = datetime.now() + timedelta(minutes=expiry_minutes)
+            
+            # Invalidate any existing unused tokens for this user
+            execute_update("""
+                UPDATE GRN_PASSWORD_RESET 
+                SET USED = 1 
+                WHERE LOGIN_ID = %s AND USED = 0
+            """, (user['LOGIN_ID'],))
+            
+            # Insert new reset token
+            execute_insert("""
+                INSERT INTO GRN_PASSWORD_RESET (LOGIN_ID, TOKEN, EXPIRES_AT, USED)
+                VALUES (%s, %s, %s, 0)
+            """, (user['LOGIN_ID'], token, expires_at))
+            
+            # Build reset URL
+            reset_url = url_for('auth.reset_password', token=token, _external=True)
+            
+            # Send email
+            email_sent = send_password_reset_email(user['EMAIL_ADDR'], reset_url)
+            
+            if not email_sent:
+                current_app.logger.warning(f"Failed to send reset email to {user['EMAIL_ADDR']}")
+                
+        except Exception as e:
+            current_app.logger.error(f"Error processing password reset: {e}")
+    
+    # SECURITY: Always show generic success message to prevent account enumeration
+    flash('If an account with that email or username exists, we have sent password reset instructions.', 'info')
+    return redirect(url_for('auth.login'))
+
+
+@auth_bp.route('/reset-password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """
+    Reset password page.
+    
+    GET: Validate token and display password reset form
+    POST: Validate token, update password, mark token as used
+    
+    SECURITY:
+    - Token must exist, not be used, and not be expired
+    - Password is hashed with bcrypt before storage
+    - Token is marked as used immediately after successful reset
+    """
+    if 'user_id' in session:
+        return redirect(url_for('customer.home'))
+    
+    # Validate token
+    reset_record = execute_query("""
+        SELECT pr.RESET_ID, pr.LOGIN_ID, pr.EXPIRES_AT, pr.USED,
+               l.USERNAME, u.EMAIL_ADDR
+        FROM GRN_PASSWORD_RESET pr
+        JOIN GRN_LOGIN l ON pr.LOGIN_ID = l.LOGIN_ID
+        JOIN GRN_USER_ACCOUNT u ON l.ACCOUNT_ID = u.ACCOUNT_ID
+        WHERE pr.TOKEN = %s
+    """, (token,), fetch_one=True)
+    
+    # Check if token is valid
+    if not reset_record:
+        flash('This password reset link is invalid.', 'danger')
+        return render_template('auth/reset_password_invalid.html')
+    
+    if reset_record['USED'] == 1:
+        flash('This password reset link has already been used.', 'danger')
+        return render_template('auth/reset_password_invalid.html')
+    
+    if reset_record['EXPIRES_AT'] < datetime.now():
+        flash('This password reset link has expired. Please request a new one.', 'danger')
+        return render_template('auth/reset_password_invalid.html')
+    
+    if request.method == 'GET':
+        return render_template('auth/reset_password.html', token=token)
+    
+    # POST - process password reset
+    new_password = request.form.get('new_password', '')
+    confirm_password = request.form.get('confirm_password', '')
+    
+    # Validate passwords
+    errors = []
+    
+    is_valid_pwd, pwd_error = validate_password_strength(new_password)
+    if not is_valid_pwd:
+        errors.append(pwd_error)
+    
+    if new_password != confirm_password:
+        errors.append("Passwords do not match.")
+    
+    if errors:
+        for error in errors:
+            flash(error, 'danger')
+        return render_template('auth/reset_password.html', token=token)
+    
+    try:
+        # Hash new password using bcrypt
+        password_hash = hash_password(new_password)
+        
+        # Update password and mark token as used in a transaction
+        with transaction() as cursor:
+            # Update password in GRN_LOGIN
+            cursor.execute("""
+                UPDATE GRN_LOGIN 
+                SET PASSWORD_HASH = %s 
+                WHERE LOGIN_ID = %s
+            """, (password_hash, reset_record['LOGIN_ID']))
+            
+            # Mark token as used
+            cursor.execute("""
+                UPDATE GRN_PASSWORD_RESET 
+                SET USED = 1 
+                WHERE RESET_ID = %s
+            """, (reset_record['RESET_ID'],))
+        
+        flash('Your password has been reset successfully. Please log in with your new password.', 'success')
+        return redirect(url_for('auth.login'))
+        
+    except Exception as e:
+        current_app.logger.error(f"Password reset error: {e}")
+        flash('An error occurred while resetting your password. Please try again.', 'danger')
+        return render_template('auth/reset_password.html', token=token)
 
 
 # ============================================================================

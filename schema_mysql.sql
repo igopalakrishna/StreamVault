@@ -302,6 +302,91 @@ CREATE TABLE GRN_LOGIN (
 COMMENT='User login credentials and roles for Part II authentication';
 
 -- ============================================================================
+-- PART II EXTENSION: PASSWORD RESET TABLE
+-- ============================================================================
+
+-- Password reset tokens table for "Forgot Password" feature
+-- This table stores secure, single-use tokens with expiration
+DROP TABLE IF EXISTS GRN_PASSWORD_RESET;
+
+CREATE TABLE GRN_PASSWORD_RESET (
+    RESET_ID INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Unique reset token identifier',
+    LOGIN_ID VARCHAR(12) NOT NULL COMMENT 'FK to GRN_LOGIN',
+    TOKEN VARCHAR(255) NOT NULL COMMENT 'Secure random token (URL-safe)',
+    EXPIRES_AT DATETIME NOT NULL COMMENT 'Token expiration timestamp',
+    USED TINYINT(1) NOT NULL DEFAULT 0 COMMENT '0=unused, 1=used',
+    CREATED_AT DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Token creation timestamp',
+    UNIQUE KEY uk_reset_token (TOKEN),
+    CONSTRAINT fk_reset_login FOREIGN KEY (LOGIN_ID) 
+        REFERENCES GRN_LOGIN(LOGIN_ID) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='Password reset tokens for forgot password feature';
+
+-- Index for efficient token lookups during password reset
+CREATE INDEX idx_reset_token_expires 
+ON GRN_PASSWORD_RESET (TOKEN, EXPIRES_AT, USED)
+COMMENT 'Optimizes token validation queries';
+
+-- Index for cleanup of expired tokens
+CREATE INDEX idx_reset_expires 
+ON GRN_PASSWORD_RESET (EXPIRES_AT)
+COMMENT 'Optimizes expired token cleanup queries';
+
+-- ============================================================================
+-- DEADLOCK PROTECTION: STORED PROCEDURE
+-- ============================================================================
+
+-- Stored procedure demonstrating deadlock-safe subscription update
+-- This procedure shows how to structure database operations to minimize deadlocks
+-- by accessing tables in a consistent order and keeping transactions short.
+
+DELIMITER //
+
+CREATE PROCEDURE sp_safe_update_subscription(
+    IN p_account_id VARCHAR(12),
+    IN p_new_subscription DECIMAL(10,2)
+)
+COMMENT 'Deadlock-safe procedure to update user subscription.
+         Demonstrates consistent table access order and minimal transaction scope.
+         DEADLOCK PREVENTION STRATEGIES USED:
+         1. Single table access - no multi-table locking issues
+         2. Uses primary key for row-level lock only
+         3. Short transaction - immediate commit after update'
+BEGIN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        -- On any error, rollback and re-raise
+        ROLLBACK;
+        RESIGNAL;
+    END;
+    
+    -- Start transaction with explicit isolation level
+    START TRANSACTION;
+    
+    -- Update subscription using primary key (minimal locking)
+    -- PRIMARY KEY access ensures only one row is locked
+    UPDATE GRN_USER_ACCOUNT 
+    SET MONTHLY_SUBSCRIPTION = p_new_subscription
+    WHERE ACCOUNT_ID = p_account_id;
+    
+    -- Immediate commit to release locks quickly
+    COMMIT;
+END //
+
+-- Procedure to clean up expired password reset tokens
+-- Called periodically to maintain table hygiene
+
+CREATE PROCEDURE sp_cleanup_expired_tokens()
+COMMENT 'Removes expired password reset tokens to prevent table bloat.
+         Safe to run concurrently - uses DELETE with WHERE on indexed column.'
+BEGIN
+    DELETE FROM GRN_PASSWORD_RESET 
+    WHERE EXPIRES_AT < NOW() OR USED = 1;
+END //
+
+DELIMITER ;
+
+-- ============================================================================
 -- EXTRA CREDIT: PERFORMANCE INDEXES
 -- ============================================================================
 
