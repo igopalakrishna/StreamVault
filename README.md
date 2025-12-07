@@ -66,6 +66,7 @@ project_part2/
 │   ├── routes_customer.py   # Customer-facing routes
 │   ├── routes_employee.py   # Admin/employee routes (CRUD)
 │   ├── routes_analytics.py  # Analytics dashboard (extra credit)
+│   ├── email_utils.py       # Email sending for password reset
 │   ├── templates/           # Jinja2 templates
 │   │   ├── base.html
 │   │   ├── auth/
@@ -346,6 +347,83 @@ def transaction():
     db.start_transaction()
     yield cursor
     db.commit()  # or rollback on exception
+```
+
+---
+
+## Part II Additional Features
+
+### 1. Forgot Password Flow
+**Files: `app/auth.py`, `app/email_utils.py`, `schema_mysql.sql`**
+
+| Route | Description |
+|-------|-------------|
+| `/forgot-password` | Enter email/username to receive reset link |
+| `/reset-password/<token>` | Enter new password with valid token |
+
+**Security Features:**
+- **Secure Token**: Generated using `secrets.token_urlsafe(32)` 
+- **Single-Use**: Token marked as USED after password reset
+- **Expiration**: Token expires after 60 minutes (configurable)
+- **No Account Enumeration**: Generic success message regardless of account existence
+
+**Database Table:**
+```sql
+CREATE TABLE GRN_PASSWORD_RESET (
+    RESET_ID INT AUTO_INCREMENT PRIMARY KEY,
+    LOGIN_ID VARCHAR(12) NOT NULL,
+    TOKEN VARCHAR(255) NOT NULL UNIQUE,
+    EXPIRES_AT DATETIME NOT NULL,
+    USED TINYINT(1) NOT NULL DEFAULT 0,
+    CREATED_AT DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (LOGIN_ID) REFERENCES GRN_LOGIN(LOGIN_ID) ON DELETE CASCADE
+);
+```
+
+**Email Configuration (`.env`):**
+```bash
+MAIL_SERVER=smtp.gmail.com    # or your SMTP server
+MAIL_PORT=587
+MAIL_USE_TLS=true
+MAIL_USERNAME=your-email@gmail.com
+MAIL_PASSWORD=your-app-password
+MAIL_DEFAULT_SENDER=noreply@streamvault.com
+```
+
+### 2. Deadlock Protection
+**File: `app/db.py`**
+
+Application-level retry mechanism for MySQL deadlocks:
+
+```python
+MYSQL_ERROR_DEADLOCK = 1213          # ER_LOCK_DEADLOCK
+MYSQL_ERROR_LOCK_WAIT_TIMEOUT = 1205 # ER_LOCK_WAIT_TIMEOUT
+DEADLOCK_MAX_RETRIES = 3
+
+@contextmanager
+def transaction():
+    """
+    Transaction with automatic retry on deadlock.
+    - Detects MySQL error codes 1213 and 1205
+    - Retries up to 3 times with exponential backoff
+    - Raises DeadlockError if all retries fail
+    """
+```
+
+**Deadlock Prevention Strategies:**
+1. Keep transactions SHORT - minimal work inside transaction
+2. Access tables in CONSISTENT ORDER across application
+3. Use appropriate ISOLATION LEVEL (InnoDB default: REPEATABLE READ)
+4. Use PRIMARY KEY for row-level locks only
+
+**Stored Procedure Example:**
+```sql
+CREATE PROCEDURE sp_safe_update_subscription(
+    IN p_account_id VARCHAR(12),
+    IN p_new_subscription DECIMAL(10,2)
+)
+-- Uses primary key access for minimal locking
+-- Immediate commit to release locks quickly
 ```
 
 ---
