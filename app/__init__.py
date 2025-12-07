@@ -22,6 +22,10 @@ def create_app(config_class=Config):
     # This is enabled by default for .html, .htm, .xml, .xhtml templates
     app.jinja_env.autoescape = True
     
+    # Register database teardown
+    from .db import close_db
+    app.teardown_appcontext(close_db)
+    
     # Register blueprints
     from .auth import auth_bp
     from .routes_customer import customer_bp
