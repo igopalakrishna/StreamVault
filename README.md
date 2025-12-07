@@ -382,13 +382,42 @@ CREATE TABLE GRN_PASSWORD_RESET (
 
 **Email Configuration (`.env`):**
 ```bash
-MAIL_SERVER=smtp.gmail.com    # or your SMTP server
+MAIL_SERVER=smtp.gmail.com
 MAIL_PORT=587
 MAIL_USE_TLS=true
+MAIL_USE_SSL=false
 MAIL_USERNAME=your-email@gmail.com
-MAIL_PASSWORD=your-app-password
-MAIL_DEFAULT_SENDER=noreply@streamvault.com
+MAIL_PASSWORD=your-16-char-app-password
+MAIL_DEFAULT_SENDER=your-email@gmail.com
 ```
+
+**⚠️ IMPORTANT: Gmail App Password Setup (Required for Gmail SMTP)**
+
+Regular Gmail passwords will NOT work. You must create an App Password:
+
+1. **Enable 2-Step Verification** (if not already):
+   - Go to: https://myaccount.google.com/security
+   - Click "2-Step Verification" → Turn ON
+
+2. **Create App Password**:
+   - Go to: https://myaccount.google.com/apppasswords
+   - Select app: "Mail"
+   - Select device: "Mac" (or "Other")
+   - Click "Generate"
+   - Copy the 16-character password (e.g., `abcdefghijklmnop`)
+
+3. **Update `.env` file** (no spaces in password!):
+   ```bash
+   MAIL_PASSWORD=abcdefghijklmnop
+   ```
+
+4. **Restart Flask** and test:
+   ```bash
+   lsof -ti:5001 | xargs kill -9
+   cd ~/project_part2 && source venv/bin/activate && python run.py
+   ```
+
+**Security Note**: App Passwords are safe - they only allow email sending and can be revoked anytime at https://myaccount.google.com/apppasswords
 
 ### 2. Deadlock Protection
 **File: `app/db.py`**
