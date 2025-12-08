@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}StreamVault{% endblock %} | CS-GY 6083</title>
+    <title>{% block title %}StreamVault{% endblock %}</title>
     
     <!-- Google Fonts - Netflix/HBO style typography -->
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -117,17 +117,67 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer mt-auto py-4">
+    <footer class="footer mt-auto py-5 border-top border-secondary">
         <div class="container">
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-6 mb-4 mb-md-0">
+                    <h5 class="text-accent mb-3"><span class="logo-letter">S</span>tream<span class="logo-letter">V</span>ault</h5>
+                    <p class="text-muted small mb-3">
+                        Your ultimate destination for premium web series streaming. Discover, watch, and explore the best content.
+                    </p>
+                    <div class="social-links">
+                        <a href="#" class="text-muted me-3" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="text-muted me-3" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" class="text-muted me-3" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="text-muted" aria-label="YouTube"><i class="bi bi-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h6 class="text-light mb-3">Company</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#" class="text-muted small">About Us</a></li>
+                        <li><a href="#" class="text-muted small">Careers</a></li>
+                        <li><a href="#" class="text-muted small">Press</a></li>
+                        <li><a href="#" class="text-muted small">Investor Relations</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h6 class="text-light mb-3">Support</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#" class="text-muted small">Help Center</a></li>
+                        <li><a href="#" class="text-muted small">Account</a></li>
+                        <li><a href="#" class="text-muted small">Media Center</a></li>
+                        <li><a href="#" class="text-muted small">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
+                    <h6 class="text-light mb-3">Legal</h6>
+                    <ul class="list-unstyled footer-links">
+                        <li><a href="#" class="text-muted small">Terms of Use</a></li>
+                        <li><a href="#" class="text-muted small">Privacy Policy</a></li>
+                        <li><a href="#" class="text-muted small">Cookie Policy</a></li>
+                        <li><a href="#" class="text-muted small">Corporate Information</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h6 class="text-light mb-3">Subscribe</h6>
+                    <p class="text-muted small mb-2">Get updates about new releases and exclusive content.</p>
+                    <form class="d-flex gap-2">
+                        <input type="email" class="form-control form-control-sm bg-dark border-secondary" placeholder="Your email" aria-label="Email">
+                        <button type="submit" class="btn btn-accent btn-sm">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <hr class="border-secondary my-4">
             <div class="row">
                 <div class="col-md-6">
-                    <h5 class="text-accent"><span class="logo-letter">S</span>tream<span class="logo-letter">V</span>ault</h5>
-                    <p class="text-muted small">CS-GY 6083 - Principles of Database Systems<br>
-                    NYU Tandon School of Engineering - Fall 2025</p>
+                    <p class="text-muted small mb-0">&copy; 2025 StreamVault. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="text-muted small mb-1">Project Part II</p>
-                    <p class="text-muted small">Built with Flask, MySQL & Bootstrap</p>
+                    <p class="text-muted small mb-0">
+                        <a href="#" class="text-muted small me-3">Cookie Preferences</a>
+                        <a href="#" class="text-muted small">Do Not Sell My Personal Information</a>
+                    </p>
                 </div>
             </div>
         </div>
