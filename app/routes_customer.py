@@ -360,17 +360,31 @@ def delete_feedback(ws_id):
     account_id = session['account_id']
     
     try:
+        # Verify feedback exists before deleting
+        existing = execute_query("""
+            SELECT WS_ID FROM GRN_FEEDBACK
+            WHERE WS_ID = %s AND ACCOUNT_ID = %s
+        """, (ws_id, account_id), fetch_one=True)
+        
+        if not existing:
+            flash('No feedback found to delete.', 'warning')
+            return redirect(url_for('customer.series_detail', ws_id=ws_id))
+        
+        # Delete the feedback
         rows_affected = execute_update("""
             DELETE FROM GRN_FEEDBACK
             WHERE WS_ID = %s AND ACCOUNT_ID = %s
         """, (ws_id, account_id))
         
         if rows_affected > 0:
+            current_app.logger.info(f"Feedback deleted: WS_ID={ws_id}, ACCOUNT_ID={account_id}")
             flash('Your feedback has been deleted.', 'success')
         else:
-            flash('No feedback found to delete.', 'warning')
+            current_app.logger.warning(f"Delete returned 0 rows: WS_ID={ws_id}, ACCOUNT_ID={account_id}")
+            flash('Failed to delete feedback. Please try again.', 'danger')
     except Exception as e:
-        flash('Failed to delete feedback.', 'danger')
+        current_app.logger.error(f"Error deleting feedback: {type(e).__name__}: {e}", exc_info=True)
+        flash(f'Failed to delete feedback: {str(e)}', 'danger')
     
     return redirect(url_for('customer.series_detail', ws_id=ws_id))
 

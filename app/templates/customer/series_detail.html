@@ -186,13 +186,17 @@
                                 {{ 'Update Review' if user_feedback else 'Submit Review' }}
                             </button>
                             {% if user_feedback %}
-                            <form method="POST" action="{{ url_for('customer.delete_feedback', ws_id=series.WS_ID) }}" class="d-inline">
-                                <button type="submit" class="btn btn-outline-danger btn-sm" 
-                                        onclick="return confirm('Delete your review?')">Delete</button>
-                            </form>
+                            <button type="button" class="btn btn-outline-danger btn-sm" 
+                                    onclick="deleteReview()">Delete</button>
                             {% endif %}
                         </div>
                     </form>
+                    {% if user_feedback %}
+                    <!-- Separate delete form (must be outside submit form) -->
+                    <form method="POST" action="{{ url_for('customer.delete_feedback', ws_id=series.WS_ID) }}" 
+                          id="deleteReviewForm" style="display: none;">
+                    </form>
+                    {% endif %}
                 </div>
                 {% else %}
                 <div class="alert alert-info">
@@ -271,4 +275,12 @@
         </div>
     </div>
 </div>
+
+<script>
+function deleteReview() {
+    if (confirm('Are you sure you want to delete your review? This action cannot be undone.')) {
+        document.getElementById('deleteReviewForm').submit();
+    }
+}
+</script>
 {% endblock %}
