@@ -137,31 +137,75 @@ a:hover {
     align-items: center;
 }
 
-/* Netflix-style logo with emphasized S and V */
+/* Netflix-style logo with arc/ribbon effect on S and V */
 .logo-text {
     display: inline-block;
     position: relative;
+    perspective: 500px; /* Enable 3D perspective for arc effect */
 }
 
 .logo-letter {
-    font-size: 1.4em; /* Bigger than surrounding text */
-    color: var(--color-accent); /* Netflix red */
+    font-size: 1.5em;
+    color: var(--color-accent);
     font-weight: 400;
     display: inline-block;
-    transform: scaleY(1.1); /* Slight vertical stretch like Netflix N */
-    text-shadow: 
-        0 0 10px var(--color-accent-glow),
-        0 2px 4px rgba(0, 0, 0, 0.5); /* Glow effect */
     position: relative;
+    
+    /* Netflix arc/ribbon effect using 3D transform */
+    transform: 
+        scaleY(1.2)           /* Vertical stretch */
+        rotateY(-15deg)       /* Arc curve effect */
+        skewY(-2deg);         /* Slight skew for ribbon feel */
+    transform-style: preserve-3d;
+    
+    /* Gradient shadow for 3D depth */
+    text-shadow: 
+        2px 0 0 #b91c1c,      /* Right shadow for depth */
+        4px 0 0 #7f1d1d,      /* Darker right edge */
+        0 0 15px var(--color-accent-glow),
+        0 0 30px rgba(230, 57, 70, 0.4);
+    
+    /* Smooth transitions */
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Arc/ribbon effect on hover */
-.navbar-brand:hover .logo-letter {
+/* Mirror effect for V - curves opposite direction */
+.logo-text .logo-letter:last-of-type {
+    transform: 
+        scaleY(1.2)
+        rotateY(15deg)        /* Opposite arc direction */
+        skewY(2deg);
     text-shadow: 
-        0 0 20px var(--color-accent),
-        0 0 40px var(--color-accent-glow);
-    transform: scaleY(1.15);
-    transition: all 0.3s ease;
+        -2px 0 0 #b91c1c,     /* Left shadow for depth */
+        -4px 0 0 #7f1d1d,
+        0 0 15px var(--color-accent-glow),
+        0 0 30px rgba(230, 57, 70, 0.4);
+}
+
+/* Enhanced arc effect on hover */
+.navbar-brand:hover .logo-letter {
+    transform: 
+        scaleY(1.25)
+        rotateY(-20deg)
+        skewY(-3deg);
+    text-shadow: 
+        3px 0 0 #b91c1c,
+        6px 0 0 #7f1d1d,
+        0 0 25px var(--color-accent),
+        0 0 50px var(--color-accent-glow);
+    filter: brightness(1.1);
+}
+
+.navbar-brand:hover .logo-letter:last-of-type {
+    transform: 
+        scaleY(1.25)
+        rotateY(20deg)
+        skewY(3deg);
+    text-shadow: 
+        -3px 0 0 #b91c1c,
+        -6px 0 0 #7f1d1d,
+        0 0 25px var(--color-accent),
+        0 0 50px var(--color-accent-glow);
 }
 
 .navbar-brand i {
