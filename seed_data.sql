@@ -147,6 +147,36 @@ INSERT INTO GRN_EPISODE (EP_ID, EP_NAME, TOTAL_VIEWERS, TECH_INTERRUPT, WS_ID) V
 ('EP016', 'Cats in the Bag', 1500000, 'No', 'WS005'),
 ('EP017', 'Felina', 10280000, 'No', 'WS005');
 
+-- Dark Episodes (WS006)
+INSERT INTO GRN_EPISODE (EP_ID, EP_NAME, TOTAL_VIEWERS, TECH_INTERRUPT, WS_ID) VALUES
+('EP018', 'Secrets', 8500000, 'No', 'WS006'),
+('EP019', 'Lies', 9200000, 'No', 'WS006'),
+('EP020', 'Past and Present', 10100000, 'No', 'WS006');
+
+-- Money Heist Episodes (WS007)
+INSERT INTO GRN_EPISODE (EP_ID, EP_NAME, TOTAL_VIEWERS, TECH_INTERRUPT, WS_ID) VALUES
+('EP021', 'The Beginning', 15000000, 'No', 'WS007'),
+('EP022', 'The Plan', 16500000, 'No', 'WS007'),
+('EP023', 'The Heist', 18000000, 'No', 'WS007');
+
+-- Sherlock Episodes (WS008)
+INSERT INTO GRN_EPISODE (EP_ID, EP_NAME, TOTAL_VIEWERS, TECH_INTERRUPT, WS_ID) VALUES
+('EP024', 'A Study in Pink', 12000000, 'No', 'WS008'),
+('EP025', 'The Blind Banker', 11500000, 'No', 'WS008'),
+('EP026', 'The Great Game', 13200000, 'No', 'WS008');
+
+-- The Witcher Episodes (WS009)
+INSERT INTO GRN_EPISODE (EP_ID, EP_NAME, TOTAL_VIEWERS, TECH_INTERRUPT, WS_ID) VALUES
+('EP027', 'The End Begins', 22000000, 'No', 'WS009'),
+('EP028', 'Four Marks', 20500000, 'No', 'WS009'),
+('EP029', 'Betrayer Moon', 21800000, 'No', 'WS009');
+
+-- Bridgerton Episodes (WS010)
+INSERT INTO GRN_EPISODE (EP_ID, EP_NAME, TOTAL_VIEWERS, TECH_INTERRUPT, WS_ID) VALUES
+('EP030', 'Diamond of the Season', 25000000, 'No', 'WS010'),
+('EP031', 'Shock and Delight', 24500000, 'No', 'WS010'),
+('EP032', 'Art of the Swoon', 26000000, 'No', 'WS010');
+
 -- ============================================================================
 -- WEB SERIES - TYPE ASSOCIATIONS
 -- ============================================================================
