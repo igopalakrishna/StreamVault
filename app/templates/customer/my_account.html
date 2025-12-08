@@ -99,6 +99,29 @@
                         </button>
                     </div>
                 </form>
+                
+                <!-- Danger Zone -->
+                <hr class="my-4 border-danger">
+                <div class="alert alert-danger border-danger">
+                    <h6 class="text-danger mb-3"><i class="bi bi-exclamation-triangle me-2"></i>Danger Zone</h6>
+                    <p class="text-muted small mb-3">
+                        Once you delete your account, there is no going back. This will permanently delete:
+                    </p>
+                    <ul class="text-muted small mb-3">
+                        <li>Your account and profile information</li>
+                        <li>All your reviews and ratings</li>
+                        <li>Your login credentials</li>
+                    </ul>
+                    <button type="button" class="btn btn-outline-danger btn-sm" 
+                            onclick="confirmDeleteAccount()">
+                        <i class="bi bi-trash me-1"></i>Delete My Account
+                    </button>
+                </div>
+                
+                <!-- Hidden delete form -->
+                <form method="POST" action="{{ url_for('customer.delete_account') }}" 
+                      id="deleteAccountForm" style="display: none;">
+                </form>
             </div>
         </div>
     </div>
@@ -148,4 +171,20 @@
         </div>
     </div>
 </div>
+
+<script>
+function confirmDeleteAccount() {
+    const confirmation = prompt(
+        'This action cannot be undone. Type "DELETE" to confirm account deletion:'
+    );
+    
+    if (confirmation === 'DELETE') {
+        if (confirm('Are you absolutely sure you want to permanently delete your account? This will remove all your data including reviews and cannot be reversed.')) {
+            document.getElementById('deleteAccountForm').submit();
+        }
+    } else if (confirmation !== null) {
+        alert('Confirmation text did not match. Account deletion cancelled.');
+    }
+}
+</script>
 {% endblock %}

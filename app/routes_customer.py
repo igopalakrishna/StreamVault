@@ -428,6 +428,68 @@ def my_account():
                          countries=countries)
 
 
+@customer_bp.route('/my-account/delete', methods=['POST'])
+@login_required
+def delete_account():
+    """
+    Delete user account and all associated data.
+    
+    Deletes in order:
+    1. GRN_PASSWORD_RESET (cascades from GRN_LOGIN, but explicit for clarity)
+    2. GRN_FEEDBACK (user's reviews)
+    3. GRN_LOGIN (authentication credentials)
+    4. GRN_USER_ACCOUNT (main account record)
+    
+    SECURITY:
+    - Only allows deletion of the logged-in user's own account
+    - Uses transaction to ensure atomicity
+    - Clears session after deletion
+    """
+    account_id = session['account_id']
+    login_id = session.get('user_id')
+    
+    try:
+        # Use transaction to ensure all deletions succeed or all rollback
+        with transaction() as cursor:
+            # 1. Delete password reset tokens (if any exist)
+            if login_id:
+                cursor.execute("""
+                    DELETE FROM GRN_PASSWORD_RESET
+                    WHERE LOGIN_ID = %s
+                """, (login_id,))
+            
+            # 2. Delete user's feedback/reviews
+            cursor.execute("""
+                DELETE FROM GRN_FEEDBACK
+                WHERE ACCOUNT_ID = %s
+            """, (account_id,))
+            
+            # 3. Delete login credentials
+            if login_id:
+                cursor.execute("""
+                    DELETE FROM GRN_LOGIN
+                    WHERE LOGIN_ID = %s
+                """, (login_id,))
+            
+            # 4. Delete user account (must be last due to FK constraints)
+            cursor.execute("""
+                DELETE FROM GRN_USER_ACCOUNT
+                WHERE ACCOUNT_ID = %s
+            """, (account_id,))
+        
+        # Clear session after successful deletion
+        session.clear()
+        
+        current_app.logger.info(f"Account deleted successfully: ACCOUNT_ID={account_id}")
+        flash('Your account has been permanently deleted.', 'info')
+        return redirect(url_for('auth.login'))
+        
+    except Exception as e:
+        current_app.logger.error(f"Error deleting account: {type(e).__name__}: {e}", exc_info=True)
+        flash('Failed to delete account. Please try again or contact support.', 'danger')
+        return redirect(url_for('customer.my_account'))
+
+
 @customer_bp.route('/my-account/update', methods=['POST'])
 @login_required
 def update_account():
