@@ -63,49 +63,46 @@
 <!-- Series Grid -->
 <div class="row">
     {% for series in series_list %}
-    <div class="col-md-6 col-lg-4 mb-4 stagger-item">
-        <div class="card series-card h-100">
-            <!-- Series Poster Image -->
-            <a href="{{ url_for('customer.series_detail', ws_id=series.WS_ID) }}">
-                <img src="{{ series.IMAGE_URL or 'https://via.placeholder.com/500x750/1a1a1a/e63946?text=' + series.WS_NAME|urlencode }}" 
-                     class="card-img-top" alt="{{ series.WS_NAME }}"
-                     style="height: 280px; object-fit: cover;"
-                     onerror="this.src='https://via.placeholder.com/500x750/1a1a1a/e63946?text=No+Image'">
+    <div class="col-md-6 col-lg-4 col-xl-3 mb-4 stagger-item">
+        <div class="card series-card h-100 overflow-hidden">
+            <!-- Series Poster Image - Full poster display -->
+            <a href="{{ url_for('customer.series_detail', ws_id=series.WS_ID) }}" class="position-relative d-block" style="background: #0d0d0d;">
+                <img src="{{ series.IMAGE_URL or 'https://via.placeholder.com/400x600/1a1a1a/e63946?text=' + series.WS_NAME|urlencode }}" 
+                     class="card-img-top w-100" alt="{{ series.WS_NAME }}"
+                     style="height: 380px; object-fit: contain; background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);"
+                     onerror="this.src='https://via.placeholder.com/400x600/1a1a1a/e63946?text=No+Image'">
+                <!-- Overlay gradient -->
+                <div class="position-absolute bottom-0 start-0 end-0" style="height: 80px; background: linear-gradient(transparent, rgba(0,0,0,0.9));"></div>
+                <!-- Rating badge -->
+                <div class="position-absolute top-0 end-0 m-2">
+                    <span class="badge bg-dark bg-opacity-75 px-2 py-1">
+                        <i class="bi bi-star-fill text-gold me-1"></i>{{ "%.1f"|format(series.AVG_RATING|float) }}
+                    </span>
+                </div>
             </a>
-            <div class="card-body">
-                <h5 class="card-title">
+            <div class="card-body py-3">
+                <h6 class="card-title mb-2">
                     <a href="{{ url_for('customer.series_detail', ws_id=series.WS_ID) }}" class="text-light text-decoration-none">
                         {{ series.WS_NAME }}
                     </a>
-                </h5>
+                </h6>
                 
                 <div class="mb-2">
                     {% if series.TYPES %}
-                    {% for type in series.TYPES.split(', ')[:3] %}
-                    <span class="badge bg-accent bg-opacity-75 me-1">{{ type }}</span>
+                    {% for type in series.TYPES.split(', ')[:2] %}
+                    <span class="badge bg-secondary bg-opacity-50 me-1 small">{{ type }}</span>
                     {% endfor %}
                     {% endif %}
                 </div>
                 
-                <p class="text-muted small mb-2">
-                    <i class="bi bi-translate me-1"></i>{{ series.LANGUAGE }} |
-                    <i class="bi bi-geo-alt me-1"></i>{{ series.COUNTRY_OF_ORIGIN }}
-                </p>
-                
-                <div class="series-meta d-flex justify-content-between align-items-center">
-                    <div class="series-rating">
-                        <i class="bi bi-star-fill text-gold"></i>
-                        <span class="fw-bold text-light">{{ "%.1f"|format(series.AVG_RATING|float) }}</span>
-                        <span class="text-muted small">({{ series.RATING_COUNT }})</span>
-                    </div>
-                    <div class="text-muted small">
-                        <i class="bi bi-eye me-1"></i>{{ "{:,}".format(series.TOTAL_VIEWERS|int) }}
-                    </div>
+                <div class="d-flex justify-content-between align-items-center text-muted small">
+                    <span><i class="bi bi-translate me-1"></i>{{ series.LANGUAGE }}</span>
+                    <span><i class="bi bi-eye me-1"></i>{{ "{:,}".format(series.TOTAL_VIEWERS|int) }}</span>
                 </div>
             </div>
-            <div class="card-footer bg-transparent border-top border-secondary">
-                <a href="{{ url_for('customer.series_detail', ws_id=series.WS_ID) }}" class="btn btn-accent btn-sm w-100">
-                    <i class="bi bi-play-circle me-1"></i>View Details
+            <div class="card-footer bg-transparent border-top border-secondary py-2">
+                <a href="{{ url_for('customer.series_detail', ws_id=series.WS_ID) }}" class="btn btn-outline-accent btn-sm w-100">
+                    <i class="bi bi-play-fill me-1"></i>Watch Now
                 </a>
             </div>
         </div>
