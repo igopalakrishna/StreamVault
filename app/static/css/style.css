@@ -137,75 +137,53 @@ a:hover {
     align-items: center;
 }
 
-/* Netflix-style logo with arc/ribbon effect on S and V */
+/* Netflix-style logo with arc/ribbon effect on entire text */
 .logo-text {
     display: inline-block;
     position: relative;
-    perspective: 500px; /* Enable 3D perspective for arc effect */
-}
-
-.logo-letter {
-    font-size: 1.5em;
+    perspective: 600px;
+    font-size: 1.3em;
     color: var(--color-accent);
-    font-weight: 400;
-    display: inline-block;
-    position: relative;
     
-    /* Netflix arc/ribbon effect using 3D transform */
+    /* Netflix arc/ribbon effect - entire word curves */
     transform: 
-        scaleY(1.2)           /* Vertical stretch */
-        rotateY(-15deg)       /* Arc curve effect */
-        skewY(-2deg);         /* Slight skew for ribbon feel */
+        scaleY(1.15)
+        rotateX(5deg)
+        rotateY(-8deg);
     transform-style: preserve-3d;
     
-    /* Gradient shadow for 3D depth */
+    /* 3D depth shadow for ribbon effect */
     text-shadow: 
-        2px 0 0 #b91c1c,      /* Right shadow for depth */
-        4px 0 0 #7f1d1d,      /* Darker right edge */
-        0 0 15px var(--color-accent-glow),
-        0 0 30px rgba(230, 57, 70, 0.4);
+        1px 1px 0 #b91c1c,
+        2px 2px 0 #991b1b,
+        3px 3px 0 #7f1d1d,
+        0 0 20px var(--color-accent-glow),
+        0 0 40px rgba(230, 57, 70, 0.3);
     
-    /* Smooth transitions */
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Mirror effect for V - curves opposite direction */
-.logo-text .logo-letter:last-of-type {
-    transform: 
-        scaleY(1.2)
-        rotateY(15deg)        /* Opposite arc direction */
-        skewY(2deg);
-    text-shadow: 
-        -2px 0 0 #b91c1c,     /* Left shadow for depth */
-        -4px 0 0 #7f1d1d,
-        0 0 15px var(--color-accent-glow),
-        0 0 30px rgba(230, 57, 70, 0.4);
+/* Emphasized S and V letters - extra pop */
+.logo-letter {
+    font-size: 1.15em;
+    display: inline-block;
+    transform: scaleY(1.1);
+    filter: brightness(1.15);
 }
 
 /* Enhanced arc effect on hover */
-.navbar-brand:hover .logo-letter {
+.navbar-brand:hover .logo-text {
     transform: 
-        scaleY(1.25)
-        rotateY(-20deg)
-        skewY(-3deg);
+        scaleY(1.2)
+        rotateX(8deg)
+        rotateY(-12deg);
     text-shadow: 
-        3px 0 0 #b91c1c,
-        6px 0 0 #7f1d1d,
-        0 0 25px var(--color-accent),
-        0 0 50px var(--color-accent-glow);
+        2px 2px 0 #b91c1c,
+        4px 4px 0 #991b1b,
+        6px 6px 0 #7f1d1d,
+        0 0 30px var(--color-accent),
+        0 0 60px var(--color-accent-glow);
     filter: brightness(1.1);
-}
-
-.navbar-brand:hover .logo-letter:last-of-type {
-    transform: 
-        scaleY(1.25)
-        rotateY(20deg)
-        skewY(3deg);
-    text-shadow: 
-        -3px 0 0 #b91c1c,
-        -6px 0 0 #7f1d1d,
-        0 0 25px var(--color-accent),
-        0 0 50px var(--color-accent-glow);
 }
 
 .navbar-brand i {
@@ -328,6 +306,18 @@ a:hover {
     color: var(--color-text-primary);
     text-transform: none; /* Keep series names as-is (e.g., "Breaking Bad") */
     letter-spacing: 0.02em;
+    font-size: 1.4rem; /* Larger series titles */
+}
+
+/* Series card specific title styling */
+.series-card .card-title {
+    font-size: 1.6rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+}
+
+.series-card .card-title a {
+    font-size: inherit;
 }
 
 /* Series Card Specific */
