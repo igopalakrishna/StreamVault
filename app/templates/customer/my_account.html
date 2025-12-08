@@ -112,15 +112,15 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between mb-2">
                     <span class="text-muted">Member Since</span>
-                    <span>{{ user.DATE_CREATED.strftime('%b %Y') if user.DATE_CREATED else 'N/A' }}</span>
+                    <strong class="text-light">{{ user.DATE_CREATED.strftime('%b %Y') if user.DATE_CREATED else 'N/A' }}</strong>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
                     <span class="text-muted">Reviews Written</span>
-                    <span>{{ feedback_history|length }}</span>
+                    <strong class="text-light">{{ feedback_history|length }}</strong>
                 </div>
                 <div class="d-flex justify-content-between">
                     <span class="text-muted">Subscription</span>
-                    <span class="text-gold">${{ "%.2f"|format(user.MONTHLY_SUBSCRIPTION) }}/mo</span>
+                    <strong class="text-gold">${{ "%.2f"|format(user.MONTHLY_SUBSCRIPTION) }}/mo</strong>
                 </div>
             </div>
         </div>
