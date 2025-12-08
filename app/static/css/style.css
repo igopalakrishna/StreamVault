@@ -28,9 +28,9 @@
     --color-danger: #ef4444;
     --color-info: #3b82f6;
     
-    /* Typography */
-    --font-display: 'Playfair Display', Georgia, serif;
-    --font-body: 'Source Sans 3', -apple-system, BlinkMacSystemFont, sans-serif;
+    /* Typography - Netflix/HBO Style */
+    --font-display: 'Bebas Neue', Impact, sans-serif;
+    --font-body: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
     
     /* Spacing */
     --space-xs: 0.25rem;
@@ -91,15 +91,19 @@ main {
 
 h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    font-weight: 600;
+    font-weight: 400; /* Bebas Neue only has 400 weight */
     margin-bottom: var(--space-md);
     color: var(--color-text-primary);
+    letter-spacing: 0.05em; /* Netflix trailer style letter spacing */
+    text-transform: uppercase; /* Bold, impactful look */
 }
 
-h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; }
-h3 { font-size: 1.5rem; }
-h4 { font-size: 1.25rem; }
+h1 { font-size: 2.8rem; letter-spacing: 0.08em; }
+h2 { font-size: 2.2rem; }
+h3 { font-size: 1.6rem; }
+h4 { font-size: 1.3rem; }
+h5 { font-size: 1.1rem; }
+h6 { font-size: 1rem; }
 
 a {
     color: var(--color-accent);
@@ -124,10 +128,11 @@ a:hover {
 
 .navbar-brand {
     font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--color-text-primary) !important;
-    letter-spacing: 1px;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--color-accent) !important; /* Netflix-style red logo */
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
 }
 
 .navbar-brand i {
@@ -248,6 +253,8 @@ a:hover {
 .card-title {
     font-family: var(--font-display);
     color: var(--color-text-primary);
+    text-transform: none; /* Keep series names as-is (e.g., "Breaking Bad") */
+    letter-spacing: 0.02em;
 }
 
 /* Series Card Specific */
