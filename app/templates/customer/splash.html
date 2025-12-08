@@ -196,7 +196,7 @@
         margin-bottom: 3rem;
     }
     
-    /* Animated Logo */
+    /* Animated Logo - Same 3D effect as navbar */
     .hero-logo {
         font-family: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
         font-size: 7rem;
@@ -206,54 +206,108 @@
         color: #e63946;
         margin: 0;
         display: inline-block;
-        opacity: 1;
-        transform: scale(1);
-        animation: logoAppear 1.2s ease-out, logoGlow 2s ease-in-out 1.2s infinite;
+        position: relative;
+        perspective: 800px;
+        
+        /* Netflix arc/ribbon effect - entire word curves (same as navbar) */
+        transform: 
+            scaleY(1.15)
+            rotateX(5deg)
+            rotateY(-8deg);
+        transform-style: preserve-3d;
+        
+        /* 3D depth shadow for ribbon effect (same as navbar) */
         text-shadow: 
-            0 0 30px #e63946,
-            0 0 60px rgba(230, 57, 70, 0.5);
+            1px 1px 0 #b91c1c,
+            2px 2px 0 #991b1b,
+            3px 3px 0 #7f1d1d,
+            0 0 20px rgba(230, 57, 70, 0.5),
+            0 0 40px rgba(230, 57, 70, 0.3);
+        
+        opacity: 1;
+        animation: logoAppear 1.2s ease-out, logoGlow 2s ease-in-out 1.2s infinite;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     /* Logo appears with scale and glow */
     @keyframes logoAppear {
         0% {
             opacity: 0.3;
-            transform: scale(0.8);
-            text-shadow: 0 0 10px #e63946;
+            transform: 
+                scaleY(0.9)
+                rotateX(5deg)
+                rotateY(-8deg)
+                scale(0.8);
+            text-shadow: 
+                0.5px 0.5px 0 #b91c1c,
+                0 0 10px rgba(230, 57, 70, 0.3);
         }
         50% {
-            transform: scale(1.05);
+            transform: 
+                scaleY(1.2)
+                rotateX(5deg)
+                rotateY(-8deg)
+                scale(1.05);
         }
         100% {
             opacity: 1;
-            transform: scale(1);
+            transform: 
+                scaleY(1.15)
+                rotateX(5deg)
+                rotateY(-8deg)
+                scale(1);
             text-shadow: 
-                0 0 30px #e63946,
-                0 0 60px rgba(230, 57, 70, 0.5);
+                1px 1px 0 #b91c1c,
+                2px 2px 0 #991b1b,
+                3px 3px 0 #7f1d1d,
+                0 0 20px rgba(230, 57, 70, 0.5),
+                0 0 40px rgba(230, 57, 70, 0.3);
         }
     }
     
-    /* Gentle pulsing glow */
+    /* Gentle pulsing glow with 3D depth */
     @keyframes logoGlow {
         0%, 100% {
             text-shadow: 
-                0 0 30px #e63946,
-                0 0 60px rgba(230, 57, 70, 0.5);
+                1px 1px 0 #b91c1c,
+                2px 2px 0 #991b1b,
+                3px 3px 0 #7f1d1d,
+                0 0 20px rgba(230, 57, 70, 0.5),
+                0 0 40px rgba(230, 57, 70, 0.3);
         }
         50% {
             text-shadow: 
-                0 0 40px #e63946,
-                0 0 80px rgba(230, 57, 70, 0.7),
-                0 0 100px rgba(230, 57, 70, 0.4);
+                2px 2px 0 #b91c1c,
+                4px 4px 0 #991b1b,
+                6px 6px 0 #7f1d1d,
+                0 0 30px rgba(230, 57, 70, 0.7),
+                0 0 60px rgba(230, 57, 70, 0.5),
+                0 0 80px rgba(230, 57, 70, 0.3);
         }
     }
     
-    /* Emphasized S and V */
+    /* Emphasized S and V - Same as navbar */
     .hero-logo .logo-letter {
-        font-size: 1.2em;
+        font-size: 1.15em;
         display: inline-block;
-        transform: scaleY(1.15);
+        transform: scaleY(1.1);
+        filter: brightness(1.15);
         color: #e63946;
+    }
+    
+    /* Enhanced arc effect on hover (same as navbar) */
+    .hero-logo-container:hover .hero-logo {
+        transform: 
+            scaleY(1.2)
+            rotateX(8deg)
+            rotateY(-12deg);
+        text-shadow: 
+            2px 2px 0 #b91c1c,
+            4px 4px 0 #991b1b,
+            6px 6px 0 #7f1d1d,
+            0 0 30px rgba(230, 57, 70, 0.7),
+            0 0 60px rgba(230, 57, 70, 0.5);
+        filter: brightness(1.1);
     }
     
     /* Tagline */
