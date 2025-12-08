@@ -969,3 +969,138 @@ main, .container, .container-fluid {
 .card a:not(.btn):hover {
     color: var(--color-gold);
 }
+
+/* ============================================================================
+   ADDITIONAL OVERRIDES - Force light colors everywhere
+   ============================================================================ */
+
+/* All Bootstrap text classes - force light colors */
+.text-body-secondary { color: #d0d0d0 !important; }
+.text-body-tertiary { color: #c0c0c0 !important; }
+.text-body-emphasis { color: #f5f5f5 !important; }
+
+/* Any element with inline dark colors */
+[class*="text-dark"],
+[class*="text-black"] {
+    color: #e8e8e8 !important;
+}
+
+/* Spans and divs inside cards */
+.card span,
+.card div:not(.card):not(.card-header):not(.card-body):not(.card-footer) {
+    color: inherit;
+}
+
+/* Series metadata - production house, language, country */
+.series-card .text-muted,
+.series-card small,
+.series-card .small,
+.series-card span.text-muted {
+    color: #c0c0c0 !important;
+}
+
+/* Viewer counts and ratings text */
+.series-card .bi + span,
+.series-card i + span {
+    color: #d0d0d0 !important;
+}
+
+/* Badge text */
+.badge {
+    color: #ffffff !important;
+}
+
+.badge.bg-secondary {
+    background-color: #6b7280 !important;
+    color: #ffffff !important;
+}
+
+.badge.bg-light {
+    background-color: #4b5563 !important;
+    color: #ffffff !important;
+}
+
+/* Force all paragraph, span, div text to be light */
+.card p { color: #d8d8d8 !important; }
+
+/* Meta information rows */
+.row span,
+.col span,
+.col-auto span {
+    color: inherit;
+}
+
+/* Any remaining gray-ish text */
+.text-gray, .text-grey {
+    color: #c8c8c8 !important;
+}
+
+/* Bootstrap border classes text */
+.border-secondary, .border-dark {
+    color: inherit;
+}
+
+/* Dropdown and menu items */
+.dropdown-item {
+    color: #d0d0d0 !important;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+    color: #ffffff !important;
+    background-color: var(--color-bg-tertiary) !important;
+}
+
+/* Form helper text */
+.form-text, .help-text {
+    color: #a0a0a0 !important;
+}
+
+/* Info text on cards */
+.card-subtitle {
+    color: #b8b8b8 !important;
+}
+
+/* Ensure all icons are visible */
+.bi, .fa, .fas, .far, .fab, i[class*="bi-"] {
+    color: inherit;
+}
+
+/* Input placeholders */
+::placeholder {
+    color: #888888 !important;
+    opacity: 1;
+}
+
+:-ms-input-placeholder {
+    color: #888888 !important;
+}
+
+::-ms-input-placeholder {
+    color: #888888 !important;
+}
+
+/* Series detail page specifics */
+.series-info span,
+.series-info div,
+.series-detail span,
+.series-detail div {
+    color: inherit;
+}
+
+/* Episode list text */
+.episode-item span,
+.episode-card span {
+    color: inherit;
+}
+
+/* Country, language badges */
+.badge-country, .badge-language, .badge-genre {
+    color: #ffffff !important;
+}
+
+/* Force visibility on any remaining dark elements */
+* {
+    --bs-body-color: #f5f5f5;
+    --bs-secondary-color: #d0d0d0;
+    --bs-tertiary-color: #b8b8b8;
+}
