@@ -8,12 +8,18 @@
     body {
         overflow: hidden;
         height: 100vh;
+        margin: 0;
+        padding: 0;
     }
     
     /* Hide navbar during splash animation */
     .navbar {
-        opacity: 0;
-        animation: fadeInNav 0.5s ease-in 2.5s forwards;
+        opacity: 0 !important;
+        transition: opacity 0.5s ease-in;
+    }
+    
+    .navbar.show {
+        opacity: 1 !important;
     }
     
     /* Splash screen container */
@@ -21,27 +27,30 @@
         position: fixed;
         top: 0;
         left: 0;
-        width: 100%;
+        width: 100vw;
         height: 100vh;
         background: #0d0d0d;
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 9999;
-        animation: fadeOut 0.8s ease-in 2s forwards;
+        z-index: 99999;
         opacity: 1;
+        transition: opacity 0.8s ease-in;
+    }
+    
+    .splash-screen.fade-out {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
     }
     
     /* Logo container */
     .splash-logo {
-        position: relative;
-        font-family: 'Bebas Neue', Impact, sans-serif;
+        font-family: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
         font-size: 8rem;
         font-weight: 400;
         letter-spacing: 0.15em;
         text-transform: uppercase;
-        perspective: 1000px;
-        transform-style: preserve-3d;
         display: flex;
         gap: 0.05em;
     }
@@ -49,43 +58,42 @@
     /* Individual letters for animation */
     .splash-logo span {
         display: inline-block;
-        position: relative;
         color: #e63946;
         text-shadow: 
             0 0 20px #e63946,
             0 0 40px rgba(230, 57, 70, 0.5),
             0 0 60px rgba(230, 57, 70, 0.3);
-        animation: letterPop 0.5s ease-out forwards;
         opacity: 0;
-        transform: translateY(80px) rotateX(90deg) scale(0.3);
+        transform: translateY(100px) scale(0.3);
+        animation: letterPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
     
-    /* Stagger animation for each letter - faster timing */
-    .splash-logo span:nth-child(1) { animation-delay: 0s; }
-    .splash-logo span:nth-child(2) { animation-delay: 0.05s; }
-    .splash-logo span:nth-child(3) { animation-delay: 0.1s; }
-    .splash-logo span:nth-child(4) { animation-delay: 0.15s; }
-    .splash-logo span:nth-child(5) { animation-delay: 0.2s; }
-    .splash-logo span:nth-child(6) { animation-delay: 0.25s; }
-    .splash-logo span:nth-child(7) { animation-delay: 0.3s; }
-    .splash-logo span:nth-child(8) { animation-delay: 0.35s; }
-    .splash-logo span:nth-child(9) { animation-delay: 0.4s; }
-    .splash-logo span:nth-child(10) { animation-delay: 0.45s; }
-    .splash-logo span:nth-child(11) { animation-delay: 0.5s; }
+    /* Stagger animation for each letter */
+    .splash-logo span:nth-child(1) { animation-delay: 0.1s; }
+    .splash-logo span:nth-child(2) { animation-delay: 0.15s; }
+    .splash-logo span:nth-child(3) { animation-delay: 0.2s; }
+    .splash-logo span:nth-child(4) { animation-delay: 0.25s; }
+    .splash-logo span:nth-child(5) { animation-delay: 0.3s; }
+    .splash-logo span:nth-child(6) { animation-delay: 0.35s; }
+    .splash-logo span:nth-child(7) { animation-delay: 0.4s; }
+    .splash-logo span:nth-child(8) { animation-delay: 0.45s; }
+    .splash-logo span:nth-child(9) { animation-delay: 0.5s; }
+    .splash-logo span:nth-child(10) { animation-delay: 0.55s; }
+    .splash-logo span:nth-child(11) { animation-delay: 0.6s; }
     
     /* Letter pop animation */
     @keyframes letterPop {
         0% {
             opacity: 0;
-            transform: translateY(80px) rotateX(90deg) scale(0.3);
+            transform: translateY(100px) scale(0.3) rotateX(90deg);
         }
         60% {
             opacity: 1;
-            transform: translateY(-15px) rotateX(-8deg) scale(1.15);
+            transform: translateY(-20px) scale(1.2) rotateX(-10deg);
         }
         100% {
             opacity: 1;
-            transform: translateY(0) rotateX(0deg) scale(1);
+            transform: translateY(0) scale(1) rotateX(0deg);
         }
     }
     
@@ -102,37 +110,18 @@
         }
     }
     
-    /* Apply arc animation after letters pop */
     .splash-logo.animate-arc {
-        animation: arcSway 1.5s ease-in-out 0.8s infinite;
-    }
-    
-    /* Fade out splash screen */
-    @keyframes fadeOut {
-        to {
-            opacity: 0;
-            visibility: hidden;
-            pointer-events: none;
-        }
-    }
-    
-    /* Fade in navbar */
-    @keyframes fadeInNav {
-        to {
-            opacity: 1;
-        }
+        animation: arcSway 1.5s ease-in-out 1s infinite;
     }
     
     /* Main content (initially hidden) */
     main {
         opacity: 0;
-        animation: fadeInContent 0.5s ease-in 2.5s forwards;
+        transition: opacity 0.5s ease-in;
     }
     
-    @keyframes fadeInContent {
-        to {
-            opacity: 1;
-        }
+    main.show {
+        opacity: 1;
     }
     
     /* Homepage hero section */
@@ -211,8 +200,8 @@
 
 {% block content %}
 <!-- Splash Screen Animation -->
-<div class="splash-screen" id="splashScreen">
-    <div class="splash-logo" id="splashLogo">
+<div class="splash-screen" id="splashScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; display: flex; align-items: center; justify-content: center; z-index: 99999;">
+    <div class="splash-logo" id="splashLogo" style="font-family: 'Bebas Neue', Impact, sans-serif; font-size: 8rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase;">
         <span>S</span>
         <span>t</span>
         <span>r</span>
@@ -246,23 +235,44 @@
 </div>
 
 <script>
-    // Add arc animation class after initial pop
-    document.addEventListener('DOMContentLoaded', function() {
+    // Ensure animations start immediately
+    (function() {
+        'use strict';
+        
+        // Add arc animation after letters pop in
         setTimeout(function() {
             const logo = document.getElementById('splashLogo');
             if (logo) {
                 logo.classList.add('animate-arc');
             }
-        }, 600);
+        }, 900);
         
-        // Remove splash screen from DOM after animation
+        // Fade out splash and show content
         setTimeout(function() {
             const splash = document.getElementById('splashScreen');
+            const main = document.querySelector('main');
+            const navbar = document.querySelector('.navbar');
+            
             if (splash) {
-                splash.style.display = 'none';
+                splash.classList.add('fade-out');
             }
-        }, 2800);
-    });
+            
+            if (main) {
+                main.classList.add('show');
+            }
+            
+            if (navbar) {
+                navbar.classList.add('show');
+            }
+            
+            // Remove splash from DOM after fade
+            setTimeout(function() {
+                if (splash) {
+                    splash.remove();
+                }
+            }, 800);
+        }, 2300);
+    })();
 </script>
 {% endblock %}
 
