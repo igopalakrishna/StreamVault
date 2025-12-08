@@ -17,7 +17,7 @@
         {% if series.TRAILER_URL %}
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-play-circle me-2 text-accent"></i>Official Trailer</h5>
+                <h5 class="mb-0 text-accent"><i class="bi bi-play-circle me-2"></i>Official Trailer</h5>
             </div>
             <div class="card-body p-0">
                 <div class="ratio ratio-16x9">
@@ -43,7 +43,7 @@
                     {% endif %}
                     
                     <div class="flex-grow-1">
-                        <h1 class="mb-3">{{ series.WS_NAME }}</h1>
+                        <h1 class="mb-3 text-accent">{{ series.WS_NAME }}</h1>
                         
                         <!-- Rating & Views -->
                         <div class="d-flex align-items-center gap-4 mb-4">
@@ -111,7 +111,7 @@
         <!-- Episodes -->
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="mb-0"><i class="bi bi-list-ol me-2"></i>Episodes ({{ episodes|length }}/{{ series.NUM_OF_EPS }})</h5>
+                <h5 class="mb-0 text-accent"><i class="bi bi-list-ol me-2"></i>Episodes ({{ episodes|length }}/{{ series.NUM_OF_EPS }})</h5>
             </div>
             <div class="card-body p-0">
                 {% if episodes %}
@@ -156,13 +156,13 @@
         <!-- Reviews Section -->
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0"><i class="bi bi-chat-quote me-2"></i>Reviews</h5>
+                <h5 class="mb-0 text-accent"><i class="bi bi-chat-quote me-2"></i>Reviews</h5>
             </div>
             <div class="card-body">
                 {% if is_authenticated %}
                 <!-- Feedback Form -->
                 <div class="mb-4 p-3 bg-darker rounded">
-                    <h6>{{ 'Update Your Review' if user_feedback else 'Leave a Review' }}</h6>
+                    <h6 class="text-accent">{{ 'Update Your Review' if user_feedback else 'Leave a Review' }}</h6>
                     <form method="POST" action="{{ url_for('customer.submit_feedback', ws_id=series.WS_ID) }}">
                         <div class="mb-3">
                             <label class="form-label">Rating</label>
