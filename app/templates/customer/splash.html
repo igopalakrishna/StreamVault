@@ -2,185 +2,116 @@
 
 {% block title %}StreamVault - Premium Streaming{% endblock %}
 
-{% block extra_head %}
+{% block content %}
 <style>
-    /* Override body for full-screen splash */
-    body {
-        overflow: hidden;
-        height: 100vh;
-        margin: 0;
-        padding: 0;
-    }
-    
-    /* Hide navbar during splash animation */
-    .navbar {
-        opacity: 0 !important;
-        transition: opacity 0.5s ease-in;
-    }
-    
-    .navbar.show {
-        opacity: 1 !important;
-    }
-    
-    /* Splash screen container */
-    .splash-screen {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #0d0d0d;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 99999;
-        opacity: 1;
-        transition: opacity 0.8s ease-in;
-    }
-    
-    .splash-screen.fade-out {
-        opacity: 0;
-        pointer-events: none;
-        visibility: hidden;
-    }
-    
-    /* Logo container */
-    .splash-logo {
-        font-family: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
-        font-size: 8rem;
-        font-weight: 400;
-        letter-spacing: 0.15em;
-        text-transform: uppercase;
-        display: flex;
-        gap: 0.05em;
-    }
-    
-    /* Individual letters for animation */
-    .splash-logo span {
-        display: inline-block;
-        color: #e63946;
-        text-shadow: 
-            0 0 20px #e63946,
-            0 0 40px rgba(230, 57, 70, 0.5),
-            0 0 60px rgba(230, 57, 70, 0.3);
-        opacity: 0;
-        transform: translateY(100px) scale(0.3);
-        animation: letterPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-    }
-    
-    /* Stagger animation for each letter */
-    .splash-logo span:nth-child(1) { animation-delay: 0.1s; }
-    .splash-logo span:nth-child(2) { animation-delay: 0.15s; }
-    .splash-logo span:nth-child(3) { animation-delay: 0.2s; }
-    .splash-logo span:nth-child(4) { animation-delay: 0.25s; }
-    .splash-logo span:nth-child(5) { animation-delay: 0.3s; }
-    .splash-logo span:nth-child(6) { animation-delay: 0.35s; }
-    .splash-logo span:nth-child(7) { animation-delay: 0.4s; }
-    .splash-logo span:nth-child(8) { animation-delay: 0.45s; }
-    .splash-logo span:nth-child(9) { animation-delay: 0.5s; }
-    .splash-logo span:nth-child(10) { animation-delay: 0.55s; }
-    .splash-logo span:nth-child(11) { animation-delay: 0.6s; }
-    
-    /* Letter pop animation */
-    @keyframes letterPop {
-        0% {
-            opacity: 0;
-            transform: translateY(100px) scale(0.3) rotateX(90deg);
-        }
-        60% {
-            opacity: 1;
-            transform: translateY(-20px) scale(1.2) rotateX(-10deg);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0) scale(1) rotateX(0deg);
-        }
-    }
-    
-    /* Arc effect animation */
-    @keyframes arcSway {
-        0%, 100% {
-            transform: translateY(0) rotateX(0deg) rotateY(0deg);
-        }
-        25% {
-            transform: translateY(-5px) rotateX(5deg) rotateY(-8deg);
-        }
-        75% {
-            transform: translateY(-5px) rotateX(5deg) rotateY(8deg);
-        }
-    }
-    
-    .splash-logo.animate-arc {
-        animation: arcSway 1.5s ease-in-out 1s infinite;
-    }
-    
-    /* Main content (initially hidden) */
-    main {
-        opacity: 0;
-        transition: opacity 0.5s ease-in;
-    }
-    
-    main.show {
-        opacity: 1;
-    }
-    
-    /* Homepage hero section */
-    .hero-section {
-        min-height: 90vh;
+    /* Hero Section - Full Viewport */
+    .splash-hero {
+        min-height: 100vh;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
         padding: 2rem;
-        background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, transparent 100%);
+        background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%);
+        position: relative;
     }
     
+    /* Logo Container - Always Visible */
+    .hero-logo-container {
+        margin-bottom: 3rem;
+    }
+    
+    /* Animated Logo */
     .hero-logo {
-        font-family: 'Bebas Neue', Impact, sans-serif;
-        font-size: 6rem;
+        font-family: 'Bebas Neue', Impact, 'Arial Black', sans-serif;
+        font-size: 7rem;
         font-weight: 400;
-        letter-spacing: 0.15em;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        color: var(--color-accent);
-        margin-bottom: 2rem;
+        color: #e63946;
+        margin: 0;
+        display: inline-block;
+        opacity: 1;
+        transform: scale(1);
+        animation: logoAppear 1.2s ease-out, logoGlow 2s ease-in-out 1.2s infinite;
         text-shadow: 
-            0 0 30px var(--color-accent),
-            0 0 60px var(--color-accent-glow);
-        transform: 
-            scaleY(1.15)
-            rotateX(5deg)
-            rotateY(-8deg);
-        transform-style: preserve-3d;
-        animation: heroGlow 3s ease-in-out infinite;
+            0 0 30px #e63946,
+            0 0 60px rgba(230, 57, 70, 0.5);
     }
     
-    @keyframes heroGlow {
+    /* Logo appears with scale and glow */
+    @keyframes logoAppear {
+        0% {
+            opacity: 0.3;
+            transform: scale(0.8);
+            text-shadow: 0 0 10px #e63946;
+        }
+        50% {
+            transform: scale(1.05);
+        }
+        100% {
+            opacity: 1;
+            transform: scale(1);
+            text-shadow: 
+                0 0 30px #e63946,
+                0 0 60px rgba(230, 57, 70, 0.5);
+        }
+    }
+    
+    /* Gentle pulsing glow */
+    @keyframes logoGlow {
         0%, 100% {
             text-shadow: 
-                0 0 30px var(--color-accent),
-                0 0 60px var(--color-accent-glow);
+                0 0 30px #e63946,
+                0 0 60px rgba(230, 57, 70, 0.5);
         }
         50% {
             text-shadow: 
-                0 0 40px var(--color-accent),
-                0 0 80px var(--color-accent-glow),
-                0 0 100px rgba(230, 57, 70, 0.5);
+                0 0 40px #e63946,
+                0 0 80px rgba(230, 57, 70, 0.7),
+                0 0 100px rgba(230, 57, 70, 0.4);
         }
     }
     
-    .hero-tagline {
-        font-size: 1.5rem;
-        color: var(--color-text-secondary);
-        margin-bottom: 3rem;
-        font-family: 'Montserrat', sans-serif;
+    /* Emphasized S and V */
+    .hero-logo .logo-letter {
+        font-size: 1.2em;
+        display: inline-block;
+        transform: scaleY(1.15);
+        color: #e63946;
     }
     
+    /* Tagline */
+    .hero-tagline {
+        font-size: 1.5rem;
+        color: #b8b8b8;
+        margin-bottom: 3rem;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 300;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out 0.5s forwards;
+    }
+    
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Buttons Container */
     .hero-buttons {
         display: flex;
-        gap: 1rem;
+        gap: 1.5rem;
         flex-wrap: wrap;
         justify-content: center;
+        opacity: 0;
+        animation: fadeInUp 0.8s ease-out 0.8s forwards;
     }
     
     .btn-hero {
@@ -189,90 +120,63 @@
         font-weight: 600;
         border-radius: 8px;
         transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
     }
     
     .btn-hero:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 30px var(--color-accent-glow);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(230, 57, 70, 0.4);
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hero-logo {
+            font-size: 4rem;
+            letter-spacing: 0.1em;
+        }
+        .hero-tagline {
+            font-size: 1.2rem;
+        }
+        .btn-hero {
+            padding: 0.8rem 2rem;
+            font-size: 1rem;
+        }
     }
 </style>
-{% endblock %}
 
-{% block content %}
-<!-- Splash Screen Animation -->
-<div class="splash-screen" id="splashScreen" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #0d0d0d; display: flex; align-items: center; justify-content: center; z-index: 99999;">
-    <div class="splash-logo" id="splashLogo" style="font-family: 'Bebas Neue', Impact, sans-serif; font-size: 8rem; font-weight: 400; letter-spacing: 0.15em; text-transform: uppercase;">
-        <span>S</span>
-        <span>t</span>
-        <span>r</span>
-        <span>e</span>
-        <span>a</span>
-        <span>m</span>
-        <span>V</span>
-        <span>a</span>
-        <span>u</span>
-        <span>l</span>
-        <span>t</span>
+<div class="splash-hero">
+    <div class="hero-logo-container">
+        <h1 class="hero-logo">
+            <span class="logo-letter">S</span>tream<span class="logo-letter">V</span>ault
+        </h1>
     </div>
-</div>
-
-<!-- Main Homepage Content -->
-<div class="hero-section">
-    <h1 class="hero-logo">
-        <span class="logo-letter">S</span>tream<span class="logo-letter">V</span>ault
-    </h1>
+    
     <p class="hero-tagline">
         Your Ultimate Destination for Premium Web Series Streaming
     </p>
+    
     <div class="hero-buttons">
         <a href="{{ url_for('customer.home') }}" class="btn btn-accent btn-hero">
-            <i class="bi bi-play-fill me-2"></i>Start Watching
+            <i class="bi bi-play-fill"></i>
+            <span>Start Watching</span>
         </a>
         <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-hero">
-            <i class="bi bi-person-plus me-2"></i>Sign Up Free
+            <i class="bi bi-person-plus"></i>
+            <span>Sign Up Free</span>
         </a>
     </div>
 </div>
 
 <script>
-    // Ensure animations start immediately
-    (function() {
-        'use strict';
-        
-        // Add arc animation after letters pop in
-        setTimeout(function() {
-            const logo = document.getElementById('splashLogo');
-            if (logo) {
-                logo.classList.add('animate-arc');
-            }
-        }, 900);
-        
-        // Fade out splash and show content
-        setTimeout(function() {
-            const splash = document.getElementById('splashScreen');
-            const main = document.querySelector('main');
-            const navbar = document.querySelector('.navbar');
-            
-            if (splash) {
-                splash.classList.add('fade-out');
-            }
-            
-            if (main) {
-                main.classList.add('show');
-            }
-            
-            if (navbar) {
-                navbar.classList.add('show');
-            }
-            
-            // Remove splash from DOM after fade
-            setTimeout(function() {
-                if (splash) {
-                    splash.remove();
-                }
-            }, 800);
-        }, 2300);
-    })();
+    // Ensure animations start immediately - no delays needed
+    // All animations are CSS-based and start automatically
+    document.addEventListener('DOMContentLoaded', function() {
+        // Logo is already visible and animating via CSS
+        // This script is just for any future enhancements
+        console.log('StreamVault splash page loaded');
+    });
 </script>
 {% endblock %}
-
