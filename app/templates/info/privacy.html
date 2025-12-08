@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Privacy Policy{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="col-lg-10 mx-auto">
+        <h1 class="mb-4 text-accent">Privacy Policy</h1>
+        
+        <div class="mb-4">
+            <p class="text-muted small">Last Updated: December 7, 2025</p>
+        </div>
+
+        <div class="mb-5">
+            <p class="lead text-light">
+                At StreamVault, we respect your privacy and are committed to protecting your personal information. 
+                This policy explains how we collect, use, and safeguard your data.
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">1. Information We Collect</h2>
+            <h6 class="text-accent mb-2">Account Information</h6>
+            <p class="text-muted mb-3">
+                When you create an account, we collect your name, email address, password (encrypted), and 
+                payment information. We also collect preferences and settings you configure.
+            </p>
+            
+            <h6 class="text-accent mb-2">Usage Data</h6>
+            <p class="text-muted mb-3">
+                We collect information about how you use our service, including:
+            </p>
+            <ul class="text-muted">
+                <li>Content you watch and when you watch it</li>
+                <li>Search queries and browsing history</li>
+                <li>Ratings and reviews you submit</li>
+                <li>Device information and IP addresses</li>
+                <li>Performance and error logs</li>
+            </ul>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">2. How We Use Your Information</h2>
+            <p class="text-muted mb-3">We use collected information to:</p>
+            <ul class="text-muted">
+                <li>Provide, maintain, and improve our services</li>
+                <li>Process payments and manage subscriptions</li>
+                <li>Personalize your viewing experience and recommendations</li>
+                <li>Communicate with you about your account and service updates</li>
+                <li>Detect and prevent fraud, abuse, and security issues</li>
+                <li>Comply with legal obligations</li>
+                <li>Conduct analytics and research</li>
+            </ul>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">3. Information Sharing</h2>
+            <p class="text-muted mb-3">
+                We do not sell your personal information. We may share your information only in the following 
+                circumstances:
+            </p>
+            <ul class="text-muted">
+                <li><strong>Service Providers:</strong> With trusted third parties who help us operate our service 
+                    (payment processors, cloud hosting, analytics)</li>
+                <li><strong>Legal Requirements:</strong> When required by law or to protect our rights</li>
+                <li><strong>Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
+                <li><strong>With Your Consent:</strong> When you explicitly authorize us to share information</li>
+            </ul>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">4. Data Security</h2>
+            <p class="text-muted">
+                We implement industry-standard security measures to protect your personal information, including 
+                encryption, secure servers, and access controls. However, no method of transmission over the 
+                internet is 100% secure, and we cannot guarantee absolute security.
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">5. Your Rights and Choices</h2>
+            <p class="text-muted mb-3">You have the right to:</p>
+            <ul class="text-muted">
+                <li>Access and update your account information</li>
+                <li>Delete your account and associated data</li>
+                <li>Opt-out of marketing communications</li>
+                <li>Request a copy of your personal data</li>
+                <li>Control cookie preferences (see Cookie Policy)</li>
+                <li>Object to certain processing of your information</li>
+            </ul>
+            <p class="text-muted mt-3">
+                To exercise these rights, contact us at <a href="mailto:privacy@streamvault.com" class="text-accent">privacy@streamvault.com</a>
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">6. Cookies and Tracking Technologies</h2>
+            <p class="text-muted">
+                We use cookies and similar technologies to enhance your experience, analyze usage, and deliver 
+                personalized content. For more details, please see our 
+                <a href="{{ url_for('info.cookie_policy') }}" class="text-accent">Cookie Policy</a>.
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">7. Children's Privacy</h2>
+            <p class="text-muted">
+                StreamVault is not intended for users under the age of 13. We do not knowingly collect personal 
+                information from children under 13. If we become aware that we have collected such information, 
+                we will take steps to delete it.
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">8. International Data Transfers</h2>
+            <p class="text-muted">
+                Your information may be transferred to and processed in countries other than your country of 
+                residence. We ensure appropriate safeguards are in place to protect your data in accordance 
+                with this Privacy Policy.
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">9. Changes to This Policy</h2>
+            <p class="text-muted">
+                We may update this Privacy Policy from time to time. We will notify you of significant changes 
+                via email or through the service. Your continued use after changes indicates acceptance.
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h5 mb-3">10. Contact Us</h2>
+            <p class="text-muted">
+                If you have questions about this Privacy Policy, please contact us at:<br>
+                <a href="mailto:privacy@streamvault.com" class="text-accent">privacy@streamvault.com</a><br>
+                StreamVault Inc., 123 Entertainment Blvd, Los Angeles, CA 90028<br>
+                Privacy Officer: privacy@streamvault.com
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

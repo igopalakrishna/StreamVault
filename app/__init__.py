@@ -31,11 +31,13 @@ def create_app(config_class=Config):
     from .routes_customer import customer_bp
     from .routes_employee import employee_bp
     from .routes_analytics import analytics_bp
+    from .routes_info import info_bp
     
     app.register_blueprint(auth_bp)
     app.register_blueprint(customer_bp)
     app.register_blueprint(employee_bp, url_prefix='/admin')
     app.register_blueprint(analytics_bp, url_prefix='/analytics')
+    app.register_blueprint(info_bp)
     
     # Register error handlers
     @app.errorhandler(404)

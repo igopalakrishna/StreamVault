@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+
+{% block title %}Contact Us{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="mb-4 text-accent">Contact Us</h1>
+        
+        <div class="mb-5">
+            <p class="lead text-light">
+                We're here to help! Reach out to us through any of the channels below.
+            </p>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-6 mb-4">
+                <div class="card bg-darker border-secondary h-100">
+                    <div class="card-body">
+                        <h5 class="text-accent mb-3"><i class="bi bi-headset me-2"></i>Customer Support</h5>
+                        <p class="text-muted mb-3">Get help with your account, billing, or technical issues.</p>
+                        <p class="mb-2">
+                            <strong class="text-light">Email:</strong><br>
+                            <a href="mailto:support@streamvault.com" class="text-accent">support@streamvault.com</a>
+                        </p>
+                        <p class="mb-0">
+                            <strong class="text-light">Phone:</strong><br>
+                            <span class="text-muted">1-800-STREAM (1-800-787-3267)</span><br>
+                            <span class="text-muted small">24/7 Support Available</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card bg-darker border-secondary h-100">
+                    <div class="card-body">
+                        <h5 class="text-accent mb-3"><i class="bi bi-building me-2"></i>Business Inquiries</h5>
+                        <p class="text-muted mb-3">For partnerships, content licensing, or corporate matters.</p>
+                        <p class="mb-2">
+                            <strong class="text-light">Email:</strong><br>
+                            <a href="mailto:business@streamvault.com" class="text-accent">business@streamvault.com</a>
+                        </p>
+                        <p class="mb-0">
+                            <strong class="text-light">Phone:</strong><br>
+                            <span class="text-muted">+1 (555) 123-4570</span><br>
+                            <span class="text-muted small">Mon-Fri, 9AM-6PM EST</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card bg-darker border-secondary mb-5">
+            <div class="card-body">
+                <h5 class="text-accent mb-4">Send Us a Message</h5>
+                <form>
+                    <div class="mb-3">
+                        <label for="name" class="form-label text-light">Name</label>
+                        <input type="text" class="form-control bg-dark border-secondary text-light" id="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-light">Email</label>
+                        <input type="email" class="form-control bg-dark border-secondary text-light" id="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="subject" class="form-label text-light">Subject</label>
+                        <select class="form-select bg-dark border-secondary text-light" id="subject" required>
+                            <option value="">Select a topic...</option>
+                            <option>Account Help</option>
+                            <option>Billing Question</option>
+                            <option>Technical Support</option>
+                            <option>Content Suggestion</option>
+                            <option>Partnership Inquiry</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="message" class="form-label text-light">Message</label>
+                        <textarea class="form-control bg-dark border-secondary text-light" id="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-accent">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card bg-darker border-secondary">
+                    <div class="card-body text-center">
+                        <i class="bi bi-geo-alt display-6 text-accent mb-2"></i>
+                        <h6 class="text-light mb-1">Headquarters</h6>
+                        <p class="text-muted small mb-0">
+                            123 Entertainment Blvd<br>
+                            Los Angeles, CA 90028<br>
+                            United States
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-darker border-secondary">
+                    <div class="card-body text-center">
+                        <i class="bi bi-envelope display-6 text-accent mb-2"></i>
+                        <h6 class="text-light mb-1">General Email</h6>
+                        <p class="text-muted small mb-0">
+                            <a href="mailto:info@streamvault.com" class="text-accent">info@streamvault.com</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card bg-darker border-secondary">
+                    <div class="card-body text-center">
+                        <i class="bi bi-clock display-6 text-accent mb-2"></i>
+                        <h6 class="text-light mb-1">Support Hours</h6>
+                        <p class="text-muted small mb-0">
+                            24/7 Customer Support<br>
+                            Business Inquiries:<br>
+                            Mon-Fri, 9AM-6PM EST
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

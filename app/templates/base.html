@@ -135,28 +135,28 @@
                 <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
                     <h6 class="text-light mb-3">Company</h6>
                     <ul class="list-unstyled footer-links">
-                        <li><a href="#" class="text-muted small">About Us</a></li>
-                        <li><a href="#" class="text-muted small">Careers</a></li>
-                        <li><a href="#" class="text-muted small">Press</a></li>
-                        <li><a href="#" class="text-muted small">Investor Relations</a></li>
+                        <li><a href="{{ url_for('info.about') }}" class="text-muted small">About Us</a></li>
+                        <li><a href="{{ url_for('info.careers') }}" class="text-muted small">Careers</a></li>
+                        <li><a href="{{ url_for('info.press') }}" class="text-muted small">Press</a></li>
+                        <li><a href="{{ url_for('info.investor_relations') }}" class="text-muted small">Investor Relations</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
                     <h6 class="text-light mb-3">Support</h6>
                     <ul class="list-unstyled footer-links">
-                        <li><a href="#" class="text-muted small">Help Center</a></li>
-                        <li><a href="#" class="text-muted small">Account</a></li>
-                        <li><a href="#" class="text-muted small">Media Center</a></li>
-                        <li><a href="#" class="text-muted small">Contact Us</a></li>
+                        <li><a href="{{ url_for('info.help_center') }}" class="text-muted small">Help Center</a></li>
+                        <li><a href="{% if session.get('user_id') %}{{ url_for('customer.my_account') }}{% else %}{{ url_for('auth.login') }}{% endif %}" class="text-muted small">Account</a></li>
+                        <li><a href="{{ url_for('info.media_center') }}" class="text-muted small">Media Center</a></li>
+                        <li><a href="{{ url_for('info.contact') }}" class="text-muted small">Contact Us</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-2 col-md-6 mb-4 mb-md-0">
                     <h6 class="text-light mb-3">Legal</h6>
                     <ul class="list-unstyled footer-links">
-                        <li><a href="#" class="text-muted small">Terms of Use</a></li>
-                        <li><a href="#" class="text-muted small">Privacy Policy</a></li>
-                        <li><a href="#" class="text-muted small">Cookie Policy</a></li>
-                        <li><a href="#" class="text-muted small">Corporate Information</a></li>
+                        <li><a href="{{ url_for('info.terms_of_use') }}" class="text-muted small">Terms of Use</a></li>
+                        <li><a href="{{ url_for('info.privacy_policy') }}" class="text-muted small">Privacy Policy</a></li>
+                        <li><a href="{{ url_for('info.cookie_policy') }}" class="text-muted small">Cookie Policy</a></li>
+                        <li><a href="{{ url_for('info.corporate_information') }}" class="text-muted small">Corporate Information</a></li>
                     </ul>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -175,7 +175,7 @@
                 </div>
                 <div class="col-md-6 text-md-end">
                     <p class="text-muted small mb-0">
-                        <a href="#" class="text-muted small me-3">Cookie Preferences</a>
+                        <a href="{{ url_for('info.cookie_policy') }}" class="text-muted small me-3">Cookie Preferences</a>
                         <a href="#" class="text-muted small">Do Not Sell My Personal Information</a>
                     </p>
                 </div>

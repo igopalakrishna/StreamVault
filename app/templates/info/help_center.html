@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Help Center{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="col-lg-10 mx-auto">
+        <h1 class="mb-4 text-accent">Help Center</h1>
+        
+        <div class="mb-5">
+            <p class="lead text-light">
+                Find answers to common questions and get help with your StreamVault account.
+            </p>
+        </div>
+
+        <div class="mb-5">
+            <h2 class="h4 mb-4">Frequently Asked Questions</h2>
+            
+            <div class="accordion" id="faqAccordion">
+                <div class="accordion-item bg-darker border-secondary mb-2">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-darker text-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How do I create an account?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Creating an account is easy! Click "Register" in the top navigation, fill in your information, 
+                            and choose a subscription plan. You can start watching immediately after registration.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item bg-darker border-secondary mb-2">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-darker text-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            What devices can I watch on?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            StreamVault is available on web browsers, mobile apps (iOS and Android), smart TVs, 
+                            gaming consoles, and streaming devices. You can stream on up to 4 devices simultaneously.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item bg-darker border-secondary mb-2">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-darker text-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            How do I cancel my subscription?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            You can cancel your subscription at any time from your account settings. Go to "My Account" 
+                            and select "Subscription" to manage or cancel your plan. Your access will continue until 
+                            the end of your current billing period.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item bg-darker border-secondary mb-2">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-darker text-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            Why is content not loading?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            If content isn't loading, try clearing your browser cache, checking your internet connection, 
+                            or refreshing the page. Ensure you're using a supported browser and that your subscription is active.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item bg-darker border-secondary mb-2">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button bg-darker text-light collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                            Can I download content to watch offline?
+                        </button>
+                    </h2>
+                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Yes! Premium subscribers can download select series and episodes to watch offline on mobile 
+                            devices. Look for the download icon on compatible content.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-5">
+            <div class="col-md-6 mb-4">
+                <div class="card bg-darker border-secondary h-100">
+                    <div class="card-body">
+                        <h5 class="text-accent mb-3"><i class="bi bi-envelope me-2"></i>Email Support</h5>
+                        <p class="text-muted mb-3">Send us an email and we'll respond within 24 hours.</p>
+                        <a href="mailto:support@streamvault.com" class="btn btn-accent btn-sm">Email Us</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-4">
+                <div class="card bg-darker border-secondary h-100">
+                    <div class="card-body">
+                        <h5 class="text-accent mb-3"><i class="bi bi-chat-dots me-2"></i>Live Chat</h5>
+                        <p class="text-muted mb-3">Chat with our support team in real-time.</p>
+                        <a href="{{ url_for('info.contact') }}" class="btn btn-accent btn-sm">Start Chat</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert alert-info bg-darker border-info">
+            <h5 class="text-info mb-2">Still need help?</h5>
+            <p class="text-muted mb-0">
+                Visit our <a href="{{ url_for('info.contact') }}" class="text-accent">Contact Us</a> page 
+                or call our support line at <strong class="text-light">1-800-STREAM (1-800-787-3267)</strong>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
