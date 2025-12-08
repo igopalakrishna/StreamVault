@@ -13,27 +13,57 @@
 <div class="row">
     <!-- Main Content -->
     <div class="col-lg-8">
+        <!-- Trailer Section -->
+        {% if series.TRAILER_URL %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-play-circle me-2 text-accent"></i>Official Trailer</h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="ratio ratio-16x9">
+                    <iframe src="{{ series.TRAILER_URL }}" 
+                            title="{{ series.WS_NAME }} Trailer"
+                            frameborder="0" 
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        
         <div class="card mb-4">
             <div class="card-body">
-                <h1 class="mb-3">{{ series.WS_NAME }}</h1>
-                
-                <!-- Rating & Views -->
-                <div class="d-flex align-items-center gap-4 mb-4">
-                    <div class="series-rating fs-5">
-                        <i class="bi bi-star-fill text-gold"></i>
-                        <span class="fw-bold">{{ "%.1f"|format(rating_info.AVG_RATING|float) }}</span>
-                        <span class="text-muted">({{ rating_info.TOTAL_RATINGS }} ratings)</span>
+                <div class="d-flex gap-4">
+                    <!-- Series Poster -->
+                    {% if series.IMAGE_URL %}
+                    <div class="flex-shrink-0 d-none d-md-block">
+                        <img src="{{ series.IMAGE_URL }}" alt="{{ series.WS_NAME }}" 
+                             class="rounded shadow" style="width: 150px; height: 225px; object-fit: cover;">
                     </div>
-                    <div class="text-muted">
-                        <i class="bi bi-eye me-1"></i>{{ "{:,}".format(viewer_info.TOTAL_VIEWERS|int) }} total views
+                    {% endif %}
+                    
+                    <div class="flex-grow-1">
+                        <h1 class="mb-3">{{ series.WS_NAME }}</h1>
+                        
+                        <!-- Rating & Views -->
+                        <div class="d-flex align-items-center gap-4 mb-4">
+                            <div class="series-rating fs-5">
+                                <i class="bi bi-star-fill text-gold"></i>
+                                <span class="fw-bold text-light">{{ "%.1f"|format(rating_info.AVG_RATING|float) }}</span>
+                                <span class="text-muted">({{ rating_info.TOTAL_RATINGS }} ratings)</span>
+                            </div>
+                            <div class="text-muted">
+                                <i class="bi bi-eye me-1"></i>{{ "{:,}".format(viewer_info.TOTAL_VIEWERS|int) }} total views
+                            </div>
+                        </div>
+                        
+                        <!-- Types -->
+                        <div class="mb-3">
+                            {% for t in types %}
+                            <span class="badge bg-accent me-1">{{ t.WS_TYPE_NAME }}</span>
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
-                
-                <!-- Types -->
-                <div class="mb-3">
-                    {% for t in types %}
-                    <span class="badge bg-accent me-1">{{ t.WS_TYPE_NAME }}</span>
-                    {% endfor %}
                 </div>
                 
                 <!-- Info Grid -->
@@ -42,19 +72,19 @@
                         <table class="table table-sm">
                             <tr>
                                 <td class="text-muted">Language</td>
-                                <td>{{ series.LANGUAGE }}</td>
+                                <td class="text-light">{{ series.LANGUAGE }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted">Country of Origin</td>
-                                <td>{{ series.COUNTRY_OF_ORIGIN }}</td>
+                                <td class="text-light">{{ series.COUNTRY_OF_ORIGIN }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted">Release Date</td>
-                                <td>{{ series.RELEASE_DATE.strftime('%B %d, %Y') if series.RELEASE_DATE else 'N/A' }}</td>
+                                <td class="text-light">{{ series.RELEASE_DATE.strftime('%B %d, %Y') if series.RELEASE_DATE else 'N/A' }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted">Episodes</td>
-                                <td>{{ series.NUM_OF_EPS }}</td>
+                                <td class="text-light">{{ series.NUM_OF_EPS }}</td>
                             </tr>
                         </table>
                     </div>
@@ -62,15 +92,15 @@
                         <table class="table table-sm">
                             <tr>
                                 <td class="text-muted">Production House</td>
-                                <td>{{ series.PH_NAME }}</td>
+                                <td class="text-light">{{ series.PH_NAME }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted">Studio Location</td>
-                                <td>{{ series.PH_CITY }}, {{ series.PH_COUNTRY }}</td>
+                                <td class="text-light">{{ series.PH_CITY }}, {{ series.PH_COUNTRY }}</td>
                             </tr>
                             <tr>
                                 <td class="text-muted">Established</td>
-                                <td>{{ series.YEAR_ESTABLISHED }}</td>
+                                <td class="text-light">{{ series.YEAR_ESTABLISHED }}</td>
                             </tr>
                         </table>
                     </div>
@@ -92,6 +122,9 @@
                                 <th style="width: 50px">#</th>
                                 <th>Episode Name</th>
                                 <th>Views</th>
+                                {% if is_employee %}
+                                <th>Tech Issues</th>
+                                {% endif %}
                             </tr>
                         </thead>
                         <tbody>
@@ -100,6 +133,15 @@
                                 <td class="text-muted">{{ loop.index }}</td>
                                 <td class="text-light">{{ ep.EP_NAME }}</td>
                                 <td class="text-light">{{ "{:,}".format(ep.TOTAL_VIEWERS) }}</td>
+                                {% if is_employee %}
+                                <td>
+                                    {% if ep.TECH_INTERRUPT == 'Yes' %}
+                                    <span class="badge bg-warning text-dark">Yes</span>
+                                    {% else %}
+                                    <span class="badge bg-success">No</span>
+                                    {% endif %}
+                                </td>
+                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

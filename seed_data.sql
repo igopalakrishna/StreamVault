@@ -96,20 +96,40 @@ INSERT INTO GRN_PROD_PROD_HOUSE (ALLIANCE_DATE, END_DATE, PRODUCER_ID, PH_ID) VA
 ('2021-03-15', '2026-03-15', 'PROD005', 'PH004');
 
 -- ============================================================================
--- WEB SERIES
+-- WEB SERIES (with poster images and YouTube trailer embeds)
 -- ============================================================================
 
-INSERT INTO GRN_WEB_SERIES (WS_ID, WS_NAME, NUM_OF_EPS, LANGUAGE, RELEASE_DATE, COUNTRY_OF_ORIGIN, PH_ID) VALUES
-('WS001', 'Stranger Things', 34, 'English', '2016-07-15', 'United States', 'PH001'),
-('WS002', 'Game of Thrones', 73, 'English', '2011-04-17', 'United States', 'PH002'),
-('WS003', 'Squid Game', 9, 'Korean', '2021-09-17', 'South Korea', 'PH001'),
-('WS004', 'The Crown', 60, 'English', '2016-11-04', 'United Kingdom', 'PH001'),
-('WS005', 'Breaking Bad', 62, 'English', '2008-01-20', 'United States', 'PH005'),
-('WS006', 'Dark', 26, 'German', '2017-12-01', 'Germany', 'PH001'),
-('WS007', 'Money Heist', 41, 'Spanish', '2017-05-02', 'Spain', 'PH001'),
-('WS008', 'Sherlock', 15, 'English', '2010-07-25', 'United Kingdom', 'PH003'),
-('WS009', 'The Witcher', 24, 'English', '2019-12-20', 'United States', 'PH001'),
-('WS010', 'Bridgerton', 16, 'English', '2020-12-25', 'United States', 'PH001');
+INSERT INTO GRN_WEB_SERIES (WS_ID, WS_NAME, NUM_OF_EPS, LANGUAGE, RELEASE_DATE, COUNTRY_OF_ORIGIN, PH_ID, IMAGE_URL, TRAILER_URL) VALUES
+('WS001', 'Stranger Things', 34, 'English', '2016-07-15', 'United States', 'PH001', 
+    'https://image.tmdb.org/t/p/w500/x2LSRK2Cm7MZhjluni1msVJ3wDF.jpg', 
+    'https://www.youtube.com/embed/b9EkMc79ZSU'),
+('WS002', 'Game of Thrones', 73, 'English', '2011-04-17', 'United States', 'PH002',
+    'https://image.tmdb.org/t/p/w500/1XS1oqL89opfnbLl8WnZY1O1uJx.jpg',
+    'https://www.youtube.com/embed/KPLWWIOCOOQ'),
+('WS003', 'Squid Game', 9, 'Korean', '2021-09-17', 'South Korea', 'PH001',
+    'https://image.tmdb.org/t/p/w500/dDlEmu3EZ0Pgg93K2SVNLCjCSvE.jpg',
+    'https://www.youtube.com/embed/oqxAJKy0ii4'),
+('WS004', 'The Crown', 60, 'English', '2016-11-04', 'United Kingdom', 'PH001',
+    'https://image.tmdb.org/t/p/w500/1M876KPjulVwppEpldhdc8V4o68.jpg',
+    'https://www.youtube.com/embed/JWtnJjn6ng0'),
+('WS005', 'Breaking Bad', 62, 'English', '2008-01-20', 'United States', 'PH005',
+    'https://image.tmdb.org/t/p/w500/ggFHVNu6YYI5L9pCfOacjizRGt.jpg',
+    'https://www.youtube.com/embed/HhesaQXLnzU'),
+('WS006', 'Dark', 26, 'German', '2017-12-01', 'Germany', 'PH001',
+    'https://image.tmdb.org/t/p/w500/apbrbWs8M9lyOpJYU5WXrpFbk1Z.jpg',
+    'https://www.youtube.com/embed/rrwycJ08PSA'),
+('WS007', 'Money Heist', 41, 'Spanish', '2017-05-02', 'Spain', 'PH001',
+    'https://image.tmdb.org/t/p/w500/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg',
+    'https://www.youtube.com/embed/_InqQJRqGW4'),
+('WS008', 'Sherlock', 15, 'English', '2010-07-25', 'United Kingdom', 'PH003',
+    'https://image.tmdb.org/t/p/w500/7WTsnHkbA0FaG6R9twfFde0I9hl.jpg',
+    'https://www.youtube.com/embed/xK7S9mrFWL4'),
+('WS009', 'The Witcher', 24, 'English', '2019-12-20', 'United States', 'PH001',
+    'https://image.tmdb.org/t/p/w500/7vjaCdMw15FEbXyLQTVa04URsPm.jpg',
+    'https://www.youtube.com/embed/ndl1W4ltcmg'),
+('WS010', 'Bridgerton', 16, 'English', '2020-12-25', 'United States', 'PH001',
+    'https://image.tmdb.org/t/p/w500/luoKpgVwi1E5nQsi7W0UuKHu2Rq.jpg',
+    'https://www.youtube.com/embed/gpv7ayf_tyE');
 
 -- ============================================================================
 -- EPISODES

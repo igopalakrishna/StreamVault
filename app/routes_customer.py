@@ -59,6 +59,7 @@ def home():
             ws.COUNTRY_OF_ORIGIN,
             ws.RELEASE_DATE,
             ws.NUM_OF_EPS,
+            ws.IMAGE_URL,
             ph.PH_NAME AS PRODUCTION_HOUSE,
             COALESCE(AVG(f.RATING), 0) AS AVG_RATING,
             COUNT(DISTINCT f.ACCOUNT_ID) AS RATING_COUNT,
@@ -102,7 +103,7 @@ def home():
     
     base_query += """
         GROUP BY ws.WS_ID, ws.WS_NAME, ws.LANGUAGE, ws.COUNTRY_OF_ORIGIN,
-                 ws.RELEASE_DATE, ws.NUM_OF_EPS, ph.PH_NAME
+                 ws.RELEASE_DATE, ws.NUM_OF_EPS, ws.IMAGE_URL, ph.PH_NAME
         ORDER BY AVG_RATING DESC, TOTAL_VIEWERS DESC
     """
     
