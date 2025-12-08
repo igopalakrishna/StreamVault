@@ -12,7 +12,7 @@ All routes use prepared statements to prevent SQL injection.
 XSS protection is handled by Jinja2 auto-escaping.
 """
 
-from flask import Blueprint, render_template, redirect, url_for, flash, request, session
+from flask import Blueprint, render_template, redirect, url_for, flash, request, session, current_app
 from .db import execute_query, execute_insert, execute_update, transaction
 from .auth import login_required
 from .security import validate_rating, generate_id, sanitize_input
