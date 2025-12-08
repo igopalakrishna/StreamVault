@@ -171,14 +171,44 @@ def register():
     
     # Create user account and login using transaction
     try:
-        account_id = generate_id('ACC')
-        login_id = generate_id('LOG')
+        # Generate unique IDs (check for collisions)
+        max_attempts = 10
+        account_id = None
+        login_id = None
+        
+        for _ in range(max_attempts):
+            candidate_account_id = generate_id('ACC')
+            candidate_login_id = generate_id('LOG')
+            
+            # Check if IDs already exist
+            existing_account = execute_query(
+                "SELECT ACCOUNT_ID FROM GRN_USER_ACCOUNT WHERE ACCOUNT_ID = %s",
+                (candidate_account_id,),
+                fetch_one=True
+            )
+            existing_login = execute_query(
+                "SELECT LOGIN_ID FROM GRN_LOGIN WHERE LOGIN_ID = %s",
+                (candidate_login_id,),
+                fetch_one=True
+            )
+            
+            if not existing_account and not existing_login:
+                account_id = candidate_account_id
+                login_id = candidate_login_id
+                break
+        
+        if not account_id or not login_id:
+            raise Exception("Failed to generate unique IDs after multiple attempts")
+        
         password_hash = hash_password(password)
         
         # Use transaction for atomicity
         # TRANSACTION: If either insert fails, both are rolled back
+        current_app.logger.info(f"Starting registration transaction for username: {username}, account_id: {account_id}, login_id: {login_id}")
+        
         with transaction() as cursor:
             # Insert into GRN_USER_ACCOUNT first (parent table)
+            current_app.logger.info(f"Inserting into GRN_USER_ACCOUNT: {account_id}")
             cursor.execute("""
                 INSERT INTO GRN_USER_ACCOUNT 
                 (ACCOUNT_ID, FIRST_NAME, MIDDLE_NAME, LAST_NAME, EMAIL_ADDR,
@@ -190,17 +220,36 @@ def register():
                   datetime.now(), float(monthly_subscription), country_id))
             
             # Insert into GRN_LOGIN (references GRN_USER_ACCOUNT)
+            current_app.logger.info(f"Inserting into GRN_LOGIN: {login_id}")
             cursor.execute("""
                 INSERT INTO GRN_LOGIN 
                 (LOGIN_ID, ACCOUNT_ID, USERNAME, PASSWORD_HASH, ROLE, CREATED_AT)
                 VALUES (%s, %s, %s, %s, %s, %s)
             """, (login_id, account_id, username, password_hash, 'CUSTOMER', datetime.now()))
         
-        flash('Registration successful! Please log in.', 'success')
+        current_app.logger.info(f"Transaction committed successfully for username: {username}")
+        
+        # Verify the user was created
+        verify_user = execute_query("""
+            SELECT l.LOGIN_ID, l.USERNAME, u.EMAIL_ADDR
+            FROM GRN_LOGIN l
+            JOIN GRN_USER_ACCOUNT u ON l.ACCOUNT_ID = u.ACCOUNT_ID
+            WHERE l.USERNAME = %s
+        """, (username,), fetch_one=True)
+        
+        if not verify_user:
+            current_app.logger.error(f"Registration verification failed: User {username} not found after insert")
+            flash('Registration completed but verification failed. Please try logging in.', 'warning')
+        else:
+            current_app.logger.info(f"User registered successfully: {username} (LOGIN_ID: {verify_user['LOGIN_ID']})")
+            flash('Registration successful! Please log in.', 'success')
+        
         return redirect(url_for('auth.login'))
         
     except Exception as e:
-        flash(f'Registration failed. Please try again.', 'danger')
+        # Log the full error for debugging
+        current_app.logger.error(f"Registration error: {type(e).__name__}: {str(e)}", exc_info=True)
+        flash(f'Registration failed: {str(e)}. Please try again.', 'danger')
         countries = execute_query("SELECT COUNTRY_ID, COUNTRY_NAME FROM GRN_COUNTRY ORDER BY COUNTRY_NAME")
         return render_template('auth/register.html', countries=countries)
 

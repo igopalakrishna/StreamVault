@@ -310,8 +310,9 @@ def transaction():
         cursor = db.cursor(dictionary=True)
         
         try:
-            # Start transaction explicitly
-            db.start_transaction()
+            # Ensure autocommit is False (transactions are implicit when autocommit=False)
+            # mysql-connector-python doesn't require explicit start_transaction()
+            # The transaction starts automatically when autocommit=False
             
             # Yield cursor to the calling code
             yield cursor
