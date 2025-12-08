@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+
+{% block title %}StreamVault - Premium Streaming{% endblock %}
+
+{% block extra_head %}
+<style>
+    /* Override body for full-screen splash */
+    body {
+        overflow: hidden;
+        height: 100vh;
+    }
+    
+    /* Hide navbar during splash animation */
+    .navbar {
+        opacity: 0;
+        animation: fadeInNav 0.5s ease-in 3s forwards;
+    }
+    
+    /* Splash screen container */
+    .splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        animation: fadeOut 0.8s ease-in 2.5s forwards;
+    }
+    
+    /* Logo container */
+    .splash-logo {
+        position: relative;
+        font-family: 'Bebas Neue', Impact, sans-serif;
+        font-size: 8rem;
+        font-weight: 400;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+    }
+    
+    /* Individual letters for animation */
+    .splash-logo span {
+        display: inline-block;
+        position: relative;
+        color: var(--color-accent);
+        text-shadow: 
+            0 0 20px var(--color-accent),
+            0 0 40px var(--color-accent-glow),
+            0 0 60px rgba(230, 57, 70, 0.5);
+        animation: letterPop 0.6s ease-out forwards;
+        opacity: 0;
+        transform: translateY(50px) rotateX(90deg);
+    }
+    
+    /* Stagger animation for each letter */
+    .splash-logo span:nth-child(1) { animation-delay: 0.1s; }
+    .splash-logo span:nth-child(2) { animation-delay: 0.15s; }
+    .splash-logo span:nth-child(3) { animation-delay: 0.2s; }
+    .splash-logo span:nth-child(4) { animation-delay: 0.25s; }
+    .splash-logo span:nth-child(5) { animation-delay: 0.3s; }
+    .splash-logo span:nth-child(6) { animation-delay: 0.35s; }
+    .splash-logo span:nth-child(7) { animation-delay: 0.4s; }
+    .splash-logo span:nth-child(8) { animation-delay: 0.45s; }
+    .splash-logo span:nth-child(9) { animation-delay: 0.5s; }
+    .splash-logo span:nth-child(10) { animation-delay: 0.55s; }
+    .splash-logo span:nth-child(11) { animation-delay: 0.6s; }
+    .splash-logo span:nth-child(12) { animation-delay: 0.65s; }
+    
+    /* Letter pop animation */
+    @keyframes letterPop {
+        0% {
+            opacity: 0;
+            transform: translateY(50px) rotateX(90deg) scale(0.5);
+        }
+        50% {
+            transform: translateY(-10px) rotateX(-5deg) scale(1.1);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) rotateX(0deg) scale(1);
+        }
+    }
+    
+    /* Arc effect animation */
+    @keyframes arcSway {
+        0%, 100% {
+            transform: translateY(0) rotateX(0deg) rotateY(0deg);
+        }
+        25% {
+            transform: translateY(-5px) rotateX(5deg) rotateY(-8deg);
+        }
+        75% {
+            transform: translateY(-5px) rotateX(5deg) rotateY(8deg);
+        }
+    }
+    
+    /* Apply arc animation after letters pop */
+    .splash-logo.animate-arc {
+        animation: arcSway 1.5s ease-in-out 1.2s infinite;
+    }
+    
+    /* Fade out splash screen */
+    @keyframes fadeOut {
+        to {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+    }
+    
+    /* Fade in navbar */
+    @keyframes fadeInNav {
+        to {
+            opacity: 1;
+        }
+    }
+    
+    /* Main content (initially hidden) */
+    main {
+        opacity: 0;
+        animation: fadeInContent 0.5s ease-in 3s forwards;
+    }
+    
+    @keyframes fadeInContent {
+        to {
+            opacity: 1;
+        }
+    }
+    
+    /* Homepage hero section */
+    .hero-section {
+        min-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem;
+        background: linear-gradient(135deg, rgba(230, 57, 70, 0.1) 0%, transparent 100%);
+    }
+    
+    .hero-logo {
+        font-family: 'Bebas Neue', Impact, sans-serif;
+        font-size: 6rem;
+        font-weight: 400;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--color-accent);
+        margin-bottom: 2rem;
+        text-shadow: 
+            0 0 30px var(--color-accent),
+            0 0 60px var(--color-accent-glow);
+        transform: 
+            scaleY(1.15)
+            rotateX(5deg)
+            rotateY(-8deg);
+        transform-style: preserve-3d;
+        animation: heroGlow 3s ease-in-out infinite;
+    }
+    
+    @keyframes heroGlow {
+        0%, 100% {
+            text-shadow: 
+                0 0 30px var(--color-accent),
+                0 0 60px var(--color-accent-glow);
+        }
+        50% {
+            text-shadow: 
+                0 0 40px var(--color-accent),
+                0 0 80px var(--color-accent-glow),
+                0 0 100px rgba(230, 57, 70, 0.5);
+        }
+    }
+    
+    .hero-tagline {
+        font-size: 1.5rem;
+        color: var(--color-text-secondary);
+        margin-bottom: 3rem;
+        font-family: 'Montserrat', sans-serif;
+    }
+    
+    .hero-buttons {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .btn-hero {
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-hero:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px var(--color-accent-glow);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Splash Screen Animation -->
+<div class="splash-screen" id="splashScreen">
+    <div class="splash-logo" id="splashLogo">
+        <span>S</span>
+        <span>t</span>
+        <span>r</span>
+        <span>e</span>
+        <span>a</span>
+        <span>m</span>
+        <span>V</span>
+        <span>a</span>
+        <span>u</span>
+        <span>l</span>
+        <span>t</span>
+    </div>
+</div>
+
+<!-- Main Homepage Content -->
+<div class="hero-section">
+    <h1 class="hero-logo">
+        <span class="logo-letter">S</span>tream<span class="logo-letter">V</span>ault
+    </h1>
+    <p class="hero-tagline">
+        Your Ultimate Destination for Premium Web Series Streaming
+    </p>
+    <div class="hero-buttons">
+        <a href="{{ url_for('customer.home') }}" class="btn btn-accent btn-hero">
+            <i class="bi bi-play-fill me-2"></i>Start Watching
+        </a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-light btn-hero">
+            <i class="bi bi-person-plus me-2"></i>Sign Up Free
+        </a>
+    </div>
+</div>
+
+<script>
+    // Add arc animation class after initial pop
+    window.addEventListener('load', function() {
+        setTimeout(function() {
+            document.getElementById('splashLogo').classList.add('animate-arc');
+        }, 700);
+        
+        // Remove splash screen from DOM after animation
+        setTimeout(function() {
+            const splash = document.getElementById('splashScreen');
+            if (splash) {
+                splash.remove();
+            }
+        }, 3500);
+    });
+</script>
+{% endblock %}
+

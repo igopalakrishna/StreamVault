@@ -26,6 +26,13 @@ customer_bp = Blueprint('customer', __name__)
 # ============================================================================
 
 @customer_bp.route('/')
+def splash():
+    """
+    Animated homepage with Netflix-style logo animation.
+    """
+    return render_template('customer/splash.html')
+
+
 @customer_bp.route('/series')
 def home():
     """
