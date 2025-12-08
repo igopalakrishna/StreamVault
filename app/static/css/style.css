@@ -128,11 +128,40 @@ a:hover {
 
 .navbar-brand {
     font-family: var(--font-display);
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     font-weight: 400;
-    color: var(--color-accent) !important; /* Netflix-style red logo */
-    letter-spacing: 0.15em;
+    color: var(--color-text-primary) !important;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+}
+
+/* Netflix-style logo with emphasized S and V */
+.logo-text {
+    display: inline-block;
+    position: relative;
+}
+
+.logo-letter {
+    font-size: 1.4em; /* Bigger than surrounding text */
+    color: var(--color-accent); /* Netflix red */
+    font-weight: 400;
+    display: inline-block;
+    transform: scaleY(1.1); /* Slight vertical stretch like Netflix N */
+    text-shadow: 
+        0 0 10px var(--color-accent-glow),
+        0 2px 4px rgba(0, 0, 0, 0.5); /* Glow effect */
+    position: relative;
+}
+
+/* Arc/ribbon effect on hover */
+.navbar-brand:hover .logo-letter {
+    text-shadow: 
+        0 0 20px var(--color-accent),
+        0 0 40px var(--color-accent-glow);
+    transform: scaleY(1.15);
+    transition: all 0.3s ease;
 }
 
 .navbar-brand i {

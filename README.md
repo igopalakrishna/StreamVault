@@ -30,11 +30,14 @@ StreamVault is a web-based streaming platform management system built for the CS
 
 ### Key Features
 - **User Authentication**: Registration, login, logout with bcrypt password hashing
+- **Forgot Password Flow**: Secure email-based password reset with expiring tokens
 - **Role-Based Access Control**: Customer and Employee roles with different permissions
 - **Customer Features**: Browse series, view details, submit/edit feedback, manage profile
 - **Employee Features**: Full CRUD on all entities (series, episodes, producers, contracts)
 - **Analytics Dashboard**: Chart.js visualizations with query caching
-- **Dark Theme UI**: Cinematic dark theme with optimized text visibility
+- **Deadlock Protection**: Automatic retry mechanism for database transaction conflicts
+- **Netflix-Style UI**: Professional Bebas Neue + Montserrat typography with iconic logo
+- **Dark Theme**: Cinematic dark theme with red accent colors and optimized visibility
 
 ---
 
@@ -507,6 +510,39 @@ def execute_cached_query(query, params=None, cache_key=None, ttl=300):
 - All text colors optimized for visibility on dark backgrounds
 - Comprehensive Bootstrap class overrides
 - Custom CSS variables for consistent theming
+
+### 5. Netflix/HBO Style Typography
+
+**Professional streaming platform fonts:**
+
+| Element | Font | Style |
+|---------|------|-------|
+| **Logo & Headings** | Bebas Neue | Uppercase, letter-spacing, Netflix trailer style |
+| **Body Text** | Montserrat | Clean, professional like HBO Max |
+
+**StreamVault Logo Features:**
+- Netflix-inspired design with emphasized "S" and "V" letters
+- Red accent color with glow effect
+- Larger, vertically stretched letters for cinematic impact
+- Hover animation with enhanced glow
+
+### 6. Series Display Enhancements
+
+| Feature | Description |
+|---------|-------------|
+| **Series Posters** | Full image display with `object-fit: contain` |
+| **Card Layout** | 4 cards per row on large screens |
+| **Rating Badge** | Overlay badge with star rating on images |
+| **YouTube Trailers** | Embedded video players on series detail pages |
+| **Red Accent Theme** | All card headings use consistent red color |
+
+### 7. Customer Experience
+
+| Feature | Details |
+|---------|---------|
+| **Episodes View** | Sequential numbering (1, 2, 3...) instead of IDs |
+| **Tech Issues Column** | Hidden for customers, visible only to employees |
+| **Episode Count** | Shows actual/planned (e.g., "3/62") |
 
 ---
 
