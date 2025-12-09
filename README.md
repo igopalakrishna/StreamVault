@@ -13,14 +13,15 @@
 
 ## Table of Contents
 1. [Project Overview](#project-overview)
-2. [Tech Stack](#tech-stack)
-3. [Project Structure](#project-structure)
-4. [Setup Instructions](#setup-instructions)
-5. [Features & Requirements Mapping](#features--requirements-mapping)
-6. [Security Implementation](#security-implementation)
-7. [Extra Credit Features](#extra-credit-features)
-8. [Demo Accounts](#demo-accounts)
-9. [Business Queries (Q1-Q6)](#business-queries)
+2. [Screenshots](#screenshots)
+3. [Tech Stack](#tech-stack)
+4. [Project Structure](#project-structure)
+5. [Setup Instructions](#setup-instructions)
+6. [Features & Requirements Mapping](#features--requirements-mapping)
+7. [Security Implementation](#security-implementation)
+8. [Extra Credit Features](#extra-credit-features)
+9. [Demo Accounts](#demo-accounts)
+10. [Business Queries (Q1-Q6)](#business-queries)
 
 ---
 
@@ -38,6 +39,61 @@ StreamVault is a web-based streaming platform management system built for the CS
 - **Deadlock Protection**: Automatic retry mechanism for database transaction conflicts
 - **Netflix-Style UI**: Professional Bebas Neue + Montserrat typography with iconic logo
 - **Dark Theme**: Cinematic dark theme with red accent colors and optimized visibility
+
+---
+
+## Screenshots
+
+### Homepage & Authentication
+
+#### Homepage
+![Homepage](demo_images/homepage.png)
+*Netflix-style animated splash screen with cinematic background*
+
+#### Login Page
+![Login Page](demo_images/Loginpage.png)
+*Secure login interface with password visibility toggle*
+
+#### Sign Up Pages
+![Sign Up Page 1](demo_images/signuppage1.png)
+*User registration form with validation*
+
+![Sign Up Page 2](demo_images/signuppage2.png)
+*Registration form with password strength requirements*
+
+### Customer Experience
+
+#### Browse Screen
+![Browse Screen](demo_images/BrowseScreen.png)
+*Series browsing interface with card-based layout*
+
+#### Series Detail Pages
+![Series Screen 1](demo_images/SeriesScreen1.png)
+*Series detail page with episodes, reviews, and trailer*
+
+![Series Screen 2](demo_images/SeriesScreen2.png)
+*Series information with production details and user feedback*
+
+### Admin Dashboard
+
+#### Admin Dashboard Views
+![Admin Dashboard 1](demo_images/AdminDashboard1.png)
+*Admin dashboard with series management interface*
+
+![Admin Dashboard 2](demo_images/AdminDashboard2.png)
+*CRUD operations for managing web series and episodes*
+
+### Analytics Dashboard
+
+#### Analytics Visualizations
+![Analytics Dashboard 1](demo_images/AnalyticsDashboard1.png)
+*Top series by viewers and ratings with Chart.js*
+
+![Analytics Dashboard 2](demo_images/AnalyticsDashboard2.png)
+*Series distribution by country and genre*
+
+![Analytics Dashboard 3](demo_images/AnalyticsDashboard3.png)
+*Production house performance metrics*
 
 ---
 
