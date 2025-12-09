@@ -114,12 +114,16 @@ def home():
         ORDER BY AVG_RATING DESC, TOTAL_VIEWERS DESC
     """
     
-    # Add pagination
+    # Add pagination - SECURITY: Using parameterized queries for LIMIT/OFFSET
     offset = (page - 1) * per_page
-    paginated_query = base_query + f" LIMIT {per_page} OFFSET {offset}"
+    paginated_query = base_query + " LIMIT %s OFFSET %s"
     
-    # Execute query - SECURITY: Using parameterized query
-    series_list = execute_query(paginated_query, tuple(params) if params else None)
+    # Extend params with pagination values
+    params_with_paging = list(params) if params else []
+    params_with_paging.extend([per_page, offset])
+    
+    # Execute query - SECURITY: All user input goes through parameterized placeholders
+    series_list = execute_query(paginated_query, tuple(params_with_paging))
     
     # Get filter options for dropdowns
     types = execute_query("SELECT WS_TYPE_ID, WS_TYPE_NAME FROM GRN_WEB_SERIES_TYPE ORDER BY WS_TYPE_NAME")
